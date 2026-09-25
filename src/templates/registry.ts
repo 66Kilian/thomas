@@ -1,5 +1,6 @@
 import type { FanTemplate } from '@/kit/template';
 
+import { aurora } from './aurora';
 import { basis } from './basis';
 
 /**
@@ -8,4 +9,4 @@ import { basis } from './basis';
  *   import { meinTemplate } from './mein-template';
  *   export const TEMPLATES = { basis, [meinTemplate.key]: meinTemplate };
  */
-export const TEMPLATES: Record<string, FanTemplate> = { basis };
+export const TEMPLATES: Record<string, FanTemplate> = { basis, aurora };
