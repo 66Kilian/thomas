@@ -1,7 +1,8 @@
 # Hinweise zum Template „Aurora"
 
-Nachtlicht-Studio: schwebende Glas-Kopfzeile, randloses Titelbild mit großem Namen, Momente-Ring,
-Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klassen; Zustandsfarben wie vorgegeben.
+Nachtlicht-Studio: schwebende Glas-Kopfzeile, randloses Titelbild mit großem Namen, Story-Ring und Highlights,
+Reihe „Empfohlen" + Raster „Neueste", Pillen für Chips/Filter. Ecken folgen dem Radius der Farbwelt
+(Karten `rounded-xl`, Knöpfe/Felder `rounded-lg`). Nur Token-Klassen; Zustandsfarben wie vorgegeben.
 
 ## Was im Vertrag fehlt
 
@@ -63,7 +64,7 @@ Verläufe/Ringe nutzen `var(--primary)` / `var(--accent)`, nicht `var(--color-pr
 
 ## Nur zur Präsentation (nicht Teil der Abgabe)
 
-- `src/app/page.tsx` + `src/app/design-wahl.tsx` — Präsentationsseite unter `/`: Design (Farbwelt) wählen,
+- `src/app/page.tsx` + `design-wahl.tsx` + `feedback.tsx`/`feedback-items.ts` — Präsentationsseite (mit Rückmelde-Checkliste) unter `/`: Design (Farbwelt) wählen,
   Seite wählen, Live-Vorschau (Desktop + Handy), „Design öffnen"; alle Zustände eingeklappt als Links.
 - `src/app/uebersicht/page.tsx` — die bisherige Kit-Übersicht, verschoben von `/` nach `/uebersicht`.
 - `src/app/rotlicht/[[...seite]]/page.tsx` + `public/demo/rotlicht/` — Beispiel-Website im Stil „Rotlicht"

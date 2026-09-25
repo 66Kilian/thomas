@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { DesignWahl } from './design-wahl';
+import { Feedback } from './feedback';
 
 /**
  * Präsentation der Designs (Startseite des Kits). Nur zum Zeigen — nicht Teil der Abgabe.
@@ -73,6 +74,9 @@ export default function Praesentation() {
             <span className="h-2 w-2 rounded-full bg-[#f43f5a]" />
             Beispiel mit Fotos ansehen: Rotlicht →
           </a>
+          <a href="#rueckmeldung" className="ml-2 mt-5 inline-flex h-11 items-center rounded-full border border-white/15 px-5 text-sm font-semibold text-white/80 transition hover:border-white/40 hover:text-white">
+            Rückmeldung geben ↓
+          </a>
         </header>
 
         <DesignWahl />
@@ -97,6 +101,8 @@ export default function Praesentation() {
             ))}
           </div>
         </details>
+
+        <Feedback />
 
         <p className="mt-10 text-center text-sm text-white/35">
           <a href="/uebersicht" className="hover:text-white">Technische Übersicht</a>
