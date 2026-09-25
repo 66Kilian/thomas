@@ -1,19 +1,37 @@
-# Hinweise zum Template
+# Hinweise zum Template „Aurora"
 
-Hier notierst du alles, was der Betreiber wissen oder klären muss. Diese Datei gehört zur Abgabe.
+Nachtlicht-Studio: schwebende Glas-Kopfzeile, randloses Titelbild mit großem Namen, Momente-Ring,
+Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klassen; Zustandsfarben wie vorgegeben.
 
 ## Was im Vertrag fehlt
 
-<!-- Feld/Zustand/Text, der fehlt · wofür du ihn brauchst · Vorschlag -->
+- **Datumsteile für Kalenderblätter** (Events): Wochentag, Tag, Monat einzeln. In `formats.ts` gibt es
+  nur zusammengesetzte Formate. Aurora nutzt deshalb next-intl mit Inline-Optionen
+  (`format.dateTime(d, { day: 'numeric' })`, `{ weekday: 'short' }`, `{ month: 'short' }`,
+  `{ month: 'long', year: 'numeric' }`, `{ hour, minute }`). Vorschlag: benannte Formate
+  `day`, `weekdayShort`, `monthShort`, `monthYear`, `time` ergänzen.
 
 ## Vorschläge über den heutigen Umfang hinaus
 
-<!-- z. B. verwandte Inhalte, Bundle-Vorschau, eigene Schrift — mit Begründung -->
+- **Bundle-Vorschau:** Collage der enthaltenen Inhalte (nutzt `bundle.items`; ohne Items Farbverlauf).
+- **Weitere Inhalte** auf der Inhaltsseite (`related`, max. 4 Kacheln).
+- **Nächster Termin** groß über der Event-Liste; Liste nach Monaten gruppiert.
+- **Auktionen mit Bild** (nutzt `imageUrl`, sonst Farbverlauf mit Symbol).
+- **Hervorhebung „Beliebt"** auf der teuersten Abo-Stufe (nur bei mehreren Stufen).
+- Fehlerseite „404" als große Zahl.
 
-## Neue Texte
+## Farbwelten
 
-<!-- Namensraum "tpl_<template>" in messages/de.json + en.json — kurze Liste, wofür -->
+Grundflächen wie Plattform, Markenfarbe/Akzent eigen. Einzige Abweichung: **Playful `mutedText`
+`#9d7e92` → `#7f6275`** — der Plattformwert erreicht auf `#fff5fa` nur 3,4 : 1 (AA verlangt 4,5).
+
+## Neue Texte (Namensraum `tpl_aurora`)
+
+Dachzeilen je Seite, „Mehr lesen/Weniger", „Im Rampenlicht", „Alle Inhalte", Kennzahl-Labels (Plural),
+„Nächster Termin", „Alle Events/Auktionen", „Beliebt", „oder", Fortschritt „von {amount}", „Dein Angebot".
 
 ## Bekannte Einschränkungen
 
-<!-- was bewusst noch nicht fertig ist -->
+- Konto-Seiten (Profil, Zahlungen, Guthaben, Benachrichtigungen, Anmelden …) übernehmen den Aufbau
+  des Basis-Templates, aber alle Grundbausteine (Knöpfe, Felder, Karten, Kästen) im Aurora-Stil.
+- Ohne Webschrift (Systemschrift, fette Gewichte); eine eigene Schrift wäre möglich (Mehraufwand).
