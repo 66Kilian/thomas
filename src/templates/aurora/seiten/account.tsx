@@ -10,7 +10,7 @@ import { BankBox } from '../bausteine/bank-box';
 import { ConfirmDialog } from '../bausteine/confirm-dialog';
 import { MethodChips } from '../bausteine/methods';
 import { Shell } from '../bausteine/shell';
-import { Box, btn, Card, Empty, Page, Title } from '../bausteine/ui';
+import { Box, btn, Card, Empty, Page, PageHead, Title } from '../bausteine/ui';
 
 /** Muster „abgemeldet": Überschrift, Aufforderung, Anmelde-Knopf. */
 function GuestOnly({ ctx, title }: { ctx: PageContext; title: string }) {
@@ -18,9 +18,8 @@ function GuestOnly({ ctx, title }: { ctx: PageContext; title: string }) {
   return (
     <Shell ctx={ctx}>
       <Page width="max-w-3xl">
-        <Title>{title}</Title>
-        <p className="mb-4 text-sm text-muted-foreground">{t('loginRequired')}</p>
-        <a href={ctx.links.login} className={btn.primary}>
+        <PageHead title={title} sub={t('loginRequired')} />
+        <a href={ctx.links.login} className={btn.large}>
           {t('loginButton')}
         </a>
       </Page>
@@ -30,8 +29,8 @@ function GuestOnly({ ctx, title }: { ctx: PageContext; title: string }) {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mt-8">
-      <h2 className="mb-3 text-lg font-semibold">{title}</h2>
+    <section className="mt-12">
+      <h2 className="mb-5 text-2xl font-black tracking-tight">{title}</h2>
       {children}
     </section>
   );
@@ -47,27 +46,31 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
   return (
     <Shell ctx={ctx}>
       <Page width="max-w-3xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold">{fan.displayName}</h1>
-            <p className="text-sm text-muted-foreground">{fan.email}</p>
+        <div className="relative flex flex-col gap-5 overflow-hidden rounded-[2rem] border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-primary/25 blur-3xl" />
+          <div className="relative flex min-w-0 items-center gap-4">
+            <span aria-hidden="true" className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-2xl font-black text-primary-foreground">{fan.displayName.charAt(0)}</span>
+            <div className="min-w-0">
+              <h1 className="truncate text-3xl font-black tracking-tight">{fan.displayName}</h1>
+              <p className="truncate text-sm text-muted-foreground">{fan.email}</p>
+            </div>
           </div>
-          <form method="post" action={ctx.links.logout.action}>
+          <form method="post" action={ctx.links.logout.action} className="relative">
             <FormFields target={ctx.links.logout} />
             <button type="submit" className={btn.outline}>
               {t('logout')}
             </button>
           </form>
         </div>
-        <nav className="mt-4 flex flex-wrap gap-2 text-sm">
+        <nav className="mt-5 flex flex-wrap gap-2 text-sm">
           {links.wallet && fan.walletCents != null && (
-            <a href={links.wallet} className="rounded-full border border-primary px-3 py-1">
+            <a href={links.wallet} className="inline-flex h-10 items-center rounded-full bg-primary px-4 font-semibold text-primary-foreground">
               {t('wallet', { amount: formatPrice(format, fan.walletCents) })}
             </a>
           )}
-          <a href={links.notifications} className="rounded-full border border-border px-3 py-1">{t('notifications')}</a>
-          <a href={links.payments} className="rounded-full border border-border px-3 py-1">{t('payments')}</a>
-          <a href={links.password} className="rounded-full border border-border px-3 py-1">{t('password')}</a>
+          <a href={links.notifications} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('notifications')}</a>
+          <a href={links.payments} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('payments')}</a>
+          <a href={links.password} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('password')}</a>
         </nav>
 
         <Section title={t('mySubscriptions')}>
@@ -133,7 +136,7 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             <div className="mt-4 space-y-1">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">{t('past')}</p>
               {pastSubscriptions.map((p) => (
-                <p key={p.endedAt} className="rounded-lg border border-dashed border-border px-3 py-2 text-sm">
+                <p key={p.endedAt} className="rounded-2xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
                   {p.tierName} · {t('endedAt', { date: date(p.endedAt) })}
                 </p>
               ))}
@@ -150,12 +153,12 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             <ul className="space-y-2">
               {purchases.map((p) => (
                 <li key={p.href}>
-                  <a href={p.href} className="flex items-center gap-3 rounded-lg border border-border p-2">
+                  <a href={p.href} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-3 transition hover:border-primary">
                     {p.imageUrl && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={p.imageUrl} alt="" className="h-12 w-12 rounded object-cover" />
+                      <img src={p.imageUrl} alt="" className="h-14 w-14 rounded-xl object-cover" />
                     )}
-                    <span lang={ctx.site.mainLanguage} className="flex-1 truncate text-sm">{p.title}</span>
+                    <span lang={ctx.site.mainLanguage} className="flex-1 truncate font-semibold">{p.title}</span>
                     <span className="text-xs text-muted-foreground">{date(p.at)}</span>
                   </a>
                 </li>
@@ -169,9 +172,9 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             {requests.length === 0 ? (
               <p className="text-sm text-muted-foreground">{t('noRequests')}</p>
             ) : (
-              <ul className="space-y-1 text-sm">
+              <ul className="space-y-2 text-sm">
                 {requests.map((r, i) => (
-                  <li key={i} className="flex justify-between gap-3">
+                  <li key={i} className="flex justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
                     <span className="truncate">{r.description}</span>
                     <span className="shrink-0 text-muted-foreground">
                       {tr(`status.${r.status}`)} · {formatPrice(format, r.offeredCents)}
@@ -190,20 +193,20 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
 function PaymentRow({ p }: { p: PaymentEntry }) {
   const t = useTranslations('payments');
   const format = useFormatter();
-  const farbe = { pending: 'bg-amber-500', paid: 'bg-emerald-600', failed: 'bg-zinc-500', refunded: 'bg-amber-600' }[p.status];
+  const farbe = { pending: 'bg-amber-400 text-amber-950', paid: 'bg-emerald-600 text-white', failed: 'bg-zinc-500 text-white', refunded: 'bg-amber-600 text-white' }[p.status];
   return (
-    <div className="space-y-2 rounded-lg border border-border p-3">
+    <div className="space-y-3 rounded-3xl border border-border bg-card p-5">
       <div className="flex items-start justify-between gap-3 text-sm">
         <div className="min-w-0">
-          {p.href ? <a href={p.href} className="font-medium underline">{p.title}</a> : <span className="font-medium">{p.title}</span>}
+          {p.href ? <a href={p.href} className="font-bold hover:underline">{p.title}</a> : <span className="font-bold">{p.title}</span>}
           <p className="text-xs text-muted-foreground">
             {format.dateTime(new Date(p.createdAt), 'dateTimeShort')} · {p.method}
           </p>
-          {p.failReason && <p className="text-xs text-amber-700">{p.failReason}</p>}
+          {p.failReason && <p className="text-xs text-muted-foreground">⚠ {p.failReason}</p>}
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <span className={`rounded-full px-2 py-0.5 text-xs text-white ${farbe}`}>{t(`status.${p.status}`)}</span>
-          <span className="font-medium tabular-nums">{formatPrice(format, p.amountCents)}</span>
+          <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${farbe}`}>{t(`status.${p.status}`)}</span>
+          <span className="text-lg font-black tabular-nums">{formatPrice(format, p.amountCents)}</span>
         </div>
       </div>
       {p.processing && <Box kind="warning">{t('processing')}</Box>}
@@ -265,16 +268,17 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
         {state === 'test' && <Box kind="info">{t('test')}</Box>}
         {state === 'ok' && (
           <>
-            <Card className="space-y-2">
-              <p className="text-sm text-muted-foreground">{t('title', { name: ctx.site.displayName })}</p>
-              <p className="text-4xl font-semibold tabular-nums">{formatPrice(format, balanceCents)}</p>
-              {blocked && <Box kind="warning">{t('blocked')}</Box>}
-            </Card>
+            <div className="relative space-y-2 overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-primary/80 to-accent p-7 text-primary-foreground shadow-2xl shadow-primary/30 sm:p-9">
+              <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary-foreground/15 blur-2xl" />
+              <p className="relative text-sm font-semibold opacity-85">{t('title', { name: ctx.site.displayName })}</p>
+              <p className="relative text-6xl font-black tabular-nums tracking-tight">{formatPrice(format, balanceCents)}</p>
+            </div>
+            {blocked && <div className="mt-4"><Box kind="warning">{t('blocked')}</Box></div>}
             {pendingTopups.length > 0 && (
               <Section title={t('pending')}>
-                <ul className="space-y-1 text-sm">
+                <ul className="space-y-2 text-sm">
                   {pendingTopups.map((p) => (
-                    <li key={p.id} className="flex justify-between">
+                    <li key={p.id} className="flex justify-between rounded-2xl border border-border bg-card px-4 py-3">
                       <span>
                         {p.method} · {format.dateTime(new Date(p.createdAt), 'dateNumeric')}
                       </span>
@@ -289,13 +293,13 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
                 <Card className="space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
                     {topup.amounts.map((a) => (
-                      <a key={a.cents} href={a.href} className={`rounded-full border px-3 py-1 text-sm ${a.selected ? 'border-primary bg-primary/10 font-medium' : 'border-border'}`}>
+                      <a key={a.cents} href={a.href} className={`inline-flex h-11 items-center rounded-full px-5 text-sm font-bold tabular-nums ${a.selected ? 'bg-foreground text-background' : 'bg-background ring-1 ring-border hover:ring-primary'}`}>
                         {formatPrice(format, a.cents)}
                       </a>
                     ))}
                     <span className="ml-2 flex items-center gap-2">
                       {topup.minusHref ? <a href={topup.minusHref} className={btn.small}>−</a> : <span className={`${btn.small} opacity-40`}>−</span>}
-                      <span className="w-20 text-center tabular-nums">{formatPrice(format, topup.selectedCents)}</span>
+                      <span className="w-24 text-center text-lg font-black tabular-nums">{formatPrice(format, topup.selectedCents)}</span>
                       {topup.plusHref ? <a href={topup.plusHref} className={btn.small}>+</a> : <span className={`${btn.small} opacity-40`}>+</span>}
                     </span>
                   </div>
@@ -304,7 +308,7 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
                   </p>
                   <MethodChips methods={topup.methods} />
                   <p className="text-sm font-semibold">{t('notRefundable')}</p>
-                  <a href={topup.purchase.state.kind === 'ready' ? topup.purchase.state.confirmHref : '#'} className={btn.primary}>
+                  <a href={topup.purchase.state.kind === 'ready' ? topup.purchase.state.confirmHref : '#'} className={`${btn.large} w-full`}>
                     {topup.purchase.buttonLabel}
                   </a>
                 </Card>
@@ -314,9 +318,9 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
               {transactions.length === 0 ? (
                 <Empty>{t('noTx')}</Empty>
               ) : (
-                <ul className="divide-y divide-border rounded-lg border border-border">
+                <ul className="divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
                   {transactions.map((tx) => (
-                    <li key={tx.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                    <li key={tx.id} className="flex items-center justify-between gap-3 px-5 py-4 text-sm">
                       <div className="min-w-0">
                         <p className="truncate">{tx.note || t(`kind.${tx.kind}`)}</p>
                         <p className="text-xs text-muted-foreground">
@@ -324,7 +328,7 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
                           {tx.balanceAfterCents != null && ` · ${t('after', { amount: formatPrice(format, tx.balanceAfterCents) })}`}
                         </p>
                       </div>
-                      <span className={`shrink-0 tabular-nums ${tx.amountCents > 0 ? 'text-emerald-700' : 'text-muted-foreground'}`}>
+                      <span className={`shrink-0 font-bold tabular-nums ${tx.amountCents > 0 ? 'text-emerald-500' : 'text-muted-foreground'}`}>
                         {tx.amountCents > 0 ? '+' : '−'}
                         {formatPrice(format, Math.abs(tx.amountCents))}
                       </span>
@@ -348,12 +352,12 @@ export function Notifications({ ctx, items, markAll }: NotificationsProps) {
   return (
     <Shell ctx={ctx}>
       <Page width="max-w-3xl">
-        <div className="mb-6 flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold">{t('title', { count: items.filter((n) => !n.read).length })}</h1>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+          <h1 className="text-4xl font-black tracking-tight">{t('title', { count: items.filter((n) => !n.read).length })}</h1>
           {markAll && (
             <form method="post" action={markAll.action}>
               <FormFields target={markAll} />
-              <button type="submit" className={`${btn.outline} border-primary`}>
+              <button type="submit" className={btn.outline}>
                 {t('markAll')}
               </button>
             </form>
@@ -362,18 +366,19 @@ export function Notifications({ ctx, items, markAll }: NotificationsProps) {
         {items.length === 0 ? (
           <Empty>{t('empty')}</Empty>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {items.map((n) => (
-              <div key={n.id} className={`rounded-lg border border-border bg-card p-3 ${n.read ? 'opacity-70' : 'border-l-4 border-l-primary'}`}>
+              <div key={n.id} className={`relative rounded-3xl border bg-card p-5 pl-7 ${n.read ? 'border-border opacity-70' : 'border-primary/50 shadow-lg shadow-primary/10'}`}>
+                {!n.read && <span aria-hidden="true" className="absolute left-3 top-6 h-2 w-2 rounded-full bg-primary" />}
                 <div className="flex items-start justify-between gap-3">
-                  <p className="font-medium">{n.title}</p>
+                  <p className="font-bold">{n.title}</p>
                   <span className="shrink-0 text-xs text-muted-foreground">{format.dateTime(new Date(n.at), 'dateTimeShort')}</span>
                 </div>
                 <p className="text-sm text-muted-foreground">{n.body}</p>
                 {n.markRead && (
                   <form method="post" action={n.markRead.action} className="mt-1">
                     <FormFields target={n.markRead} />
-                    <button type="submit" className="text-xs underline">
+                    <button type="submit" className="text-xs font-semibold underline decoration-primary decoration-2 underline-offset-4">
                       {t('markRead')}
                     </button>
                   </form>

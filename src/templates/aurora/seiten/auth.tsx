@@ -17,24 +17,26 @@ import { Box, btn, input, Page } from '../bausteine/ui';
 
 function AuthCard({ title, form, children, footer }: { title: string; form: AuthForm; children: ReactNode; footer?: ReactNode }) {
   return (
-    <div className="w-full max-w-sm rounded-xl border border-border bg-card p-6">
-      <h1 className="mb-4 text-xl font-semibold">{title}</h1>
-      <form method="post" action={form.submit.action} className="space-y-3">
+    <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
+      <h1 className="relative mb-7 text-3xl font-black tracking-tight">{title}</h1>
+      <form method="post" action={form.submit.action} className="relative space-y-4">
         <FormFields target={form.submit} />
         {form.success && <Box kind="success">{form.success}</Box>}
         {children}
-        {form.error && <p className="text-sm text-red-600">{form.error}</p>}
+        {form.error && <p className="text-sm font-medium text-red-500">{form.error}</p>}
       </form>
-      {footer && <div className="mt-4 space-y-1 text-sm text-muted-foreground">{footer}</div>}
+      {footer && <div className="relative mt-6 space-y-1.5 border-t border-border pt-5 text-sm text-muted-foreground [&_a]:font-semibold [&_a]:text-foreground [&_a]:decoration-primary [&_a]:decoration-2 [&_a]:underline-offset-4">{footer}</div>}
     </div>
   );
 }
 
 function Field({ name, label, type = 'text', value, autoComplete }: { name: string; label: string; type?: string; value?: string; autoComplete?: string }) {
   return (
-    <label className="block text-sm">
+    <label className="block text-sm font-semibold">
       {label}
-      <input name={name} type={type} defaultValue={value} autoComplete={autoComplete} className={`${input} mt-1`} />
+      <input name={name} type={type} defaultValue={value} autoComplete={autoComplete} className={`${input} mt-2 h-12`} />
     </label>
   );
 }
@@ -87,7 +89,7 @@ export function Register({ ctx, form }: AuthPageProps) {
         <p className="text-xs text-muted-foreground">{t('ageNote')}</p>
         <p className="text-xs text-muted-foreground">{t('mailNote')}</p>
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" name="terms" required className="mt-1" />
+          <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]" />
           <span>
             <a href={ctx.links.terms} className="underline">{t('termsAgree')}</a>
           </span>
@@ -164,8 +166,9 @@ export function VerifyEmail({ ctx, state, confirm, resend }: VerifyEmailProps) {
   const t = useTranslations('auth');
   return (
     <Shell ctx={ctx} bare>
-      <div className="w-full max-w-sm space-y-4 rounded-xl border border-border bg-card p-6">
-        <h1 className="text-xl font-semibold">{t('verifyTitle')}</h1>
+      <div className="relative w-full max-w-md space-y-5 overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
+        <h1 className="relative text-3xl font-black tracking-tight">{t('verifyTitle')}</h1>
         {state === 'done' || state === 'already' ? <Box kind="success">{t(`verify.${state}`)}</Box> : <p className="text-sm">{t(`verify.${state}`)}</p>}
         {confirm && (
           <form method="post" action={confirm.action}>
@@ -202,8 +205,9 @@ export function TermsConsent({ ctx, changed, alreadyAccepted, termsMarkdown, for
   const t = useTranslations('auth');
   return (
     <Shell ctx={ctx} bare>
-      <div className="w-full max-w-2xl space-y-4 rounded-xl border border-border bg-card p-6">
-        <h1 className="text-xl font-semibold">{changed ? t('termsTitleChanged') : t('termsTitleFirst')}</h1>
+      <div className="relative w-full max-w-2xl space-y-6 overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
+        <h1 className="relative text-3xl font-black tracking-tight">{changed ? t('termsTitleChanged') : t('termsTitleFirst')}</h1>
         {alreadyAccepted ? (
           <>
             <Box kind="success">{t('termsAlready')}</Box>
@@ -214,11 +218,11 @@ export function TermsConsent({ ctx, changed, alreadyAccepted, termsMarkdown, for
         ) : (
           <form method="post" action={form.submit.action} className="space-y-4">
             <FormFields target={form.submit} />
-            <div className="max-h-[50vh] overflow-y-auto rounded-lg border border-border p-4">
+            <div className="max-h-[50vh] overflow-y-auto rounded-2xl border border-border bg-background/60 p-5 text-sm leading-6">
               <RichText markdown={termsMarkdown} lang="de" />
             </div>
             <label className="flex items-start gap-2 text-sm">
-              <input type="checkbox" name="terms" required className="mt-1" /> {t('termsAccept')}
+              <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]" /> {t('termsAccept')}
             </label>
             <div className="flex flex-wrap items-center gap-4">
               <button type="submit" className={btn.primary}>

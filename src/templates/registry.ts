@@ -9,4 +9,4 @@ import { basis } from './basis';
  *   import { meinTemplate } from './mein-template';
  *   export const TEMPLATES = { basis, [meinTemplate.key]: meinTemplate };
  */
-export const TEMPLATES: Record<string, FanTemplate> = { basis, aurora };
+export const TEMPLATES: Record<string, FanTemplate> = { aurora, basis };

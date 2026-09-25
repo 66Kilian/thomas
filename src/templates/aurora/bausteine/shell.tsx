@@ -213,10 +213,16 @@ export function Shell({ ctx, children, bare }: ShellProps) {
   const t = useTranslations('shell');
   if (bare) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-5 px-4 py-10">
-        <div className="flex w-full max-w-sm items-center justify-between gap-3 text-sm">
-          <a href={ctx.links.home} className="truncate text-muted-foreground hover:text-foreground">
-            {t('back', { name: ctx.site.displayName })}
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-4 py-10">
+        <div className="flex w-full max-w-md items-center justify-between gap-3 text-sm">
+          <a href={ctx.links.home} className="inline-flex min-w-0 items-center gap-2.5 rounded-full bg-card py-1 pl-1 pr-4 font-semibold ring-1 ring-border hover:ring-primary">
+            {ctx.site.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={ctx.site.logoUrl} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
+            ) : (
+              <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">{ctx.site.displayName.charAt(0)}</span>
+            )}
+            <span className="truncate">{t('back', { name: ctx.site.displayName })}</span>
           </a>
           <LanguageSwitch ctx={ctx} />
         </div>
