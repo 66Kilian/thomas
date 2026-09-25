@@ -18,5 +18,5 @@ export function proxy(request: NextRequest): NextResponse {
 // Kein Matcher mit Ausschluss-Muster: Das Muster griff bei den Vorschau-Pfaden (/v/…) nicht. Die Prüfung
 // oben ist billig (ein Suchparameter), statische Dateien laufen ohnehin nicht über Seiten.
 export const config = {
-  matcher: ['/', '/v/:path*']
+  matcher: ['/', '/v/:path*', '/rotlicht', '/rotlicht/:path*']
 };

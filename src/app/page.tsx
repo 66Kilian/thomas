@@ -69,6 +69,10 @@ export default function Praesentation() {
         <header className="mb-10 max-w-2xl">
           <h1 className="text-4xl font-black tracking-tight sm:text-6xl">Wähle dein Design.</h1>
           <p className="mt-3 text-lg text-white/60">Design antippen — die Vorschau zeigt sofort, wie es aussieht. Dann mit einem Klick öffnen.</p>
+          <a href="/rotlicht" className="mt-5 inline-flex h-11 items-center gap-2 rounded-full border border-[#f43f5a]/60 bg-[#f43f5a]/10 px-5 text-sm font-bold text-white transition hover:bg-[#f43f5a]/25">
+            <span className="h-2 w-2 rounded-full bg-[#f43f5a]" />
+            Beispiel mit Fotos ansehen: Rotlicht →
+          </a>
         </header>
 
         <DesignWahl />
