@@ -136,7 +136,8 @@ Events/Auktionen"; „Beliebt", „Ausgewählt", „Auswählen", „Wähle deine
 - `messages/de.json`, `messages/en.json` — nur Namensraum `tpl_aurora` ergänzt.
 - `src/templates/registry.ts` — Eintrag `aurora` (in der Abgabe: `{ basis, aurora }`).
 - **Nur zur Präsentation, nicht Teil der Abgabe** (im Repo, nicht im ZIP): `src/app/page.tsx`,
-  `design-wahl.tsx`, `feedback.tsx`, `feedback-items.ts` (Design-Auswahl + Rückmelde-Liste unter `/`),
+  `design-wahl.tsx`, `feedback.tsx`, `feedback-items.ts`, `praesentation-i18n.ts` (Design-Auswahl +
+  Rückmelde-Liste unter `/`, Sprachwahl Deutsch/Englisch/Slowakisch über `?l=`),
   `src/app/uebersicht/page.tsx` (Kit-Übersicht nach `/uebersicht` verschoben),
   `src/app/rotlicht/[[...seite]]/page.tsx` + `public/demo/rotlicht/` (Beispiel mit CC0-Fotos unter
   `/rotlicht`), `src/proxy.ts` (Matcher um `/rotlicht` ergänzt). `src/kit/`, `src/mock/` und
