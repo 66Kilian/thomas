@@ -66,9 +66,9 @@ export function ContentDetail({ ctx, content, media, paywall, confirm, related, 
         {meta}
 
         {paywall ? (
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
             <div className="space-y-8">
-              <div className="relative aspect-video overflow-hidden rounded-[2rem] bg-muted ring-1 ring-border">
+              <div className="relative aspect-video overflow-hidden rounded-xl bg-muted ring-1 ring-border">
                 {content.imageLargeUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={content.imageLargeUrl} alt="" className="h-full w-full object-cover" />
@@ -85,7 +85,7 @@ export function ContentDetail({ ctx, content, media, paywall, confirm, related, 
             </div>
 
             <aside className="lg:sticky lg:top-40">
-              <div className="relative space-y-6 overflow-hidden rounded-[2rem] border border-border bg-card p-6">
+              <div className="relative space-y-6 overflow-hidden rounded-xl border border-border bg-card p-6">
                 <div aria-hidden="true" className="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-primary/25 blur-3xl" />
                 {paywall.purchase && (
                   <div className="relative">
@@ -115,11 +115,11 @@ export function ContentDetail({ ctx, content, media, paywall, confirm, related, 
         ) : (
           <div className="space-y-8">
             {media.length === 0 ? (
-              <p className="rounded-3xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">{t('noMedia')}</p>
+              <p className="rounded-xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">{t('noMedia')}</p>
             ) : content.type === 'video' ? (
               media.map((m, i) => (
                 <div key={i} className="space-y-3">
-                  <div className="overflow-hidden rounded-[2rem] ring-1 ring-border">
+                  <div className="overflow-hidden rounded-xl ring-1 ring-border">
                     <VideoPlayer file={m} className="w-full" sampleLabel={t('sampleVideo')} />
                   </div>
                   {m.downloadHref && (
@@ -133,7 +133,7 @@ export function ContentDetail({ ctx, content, media, paywall, confirm, related, 
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {media.map((m, i) => (
-                  <a key={i} href={m.url} className="group block overflow-hidden rounded-2xl ring-1 ring-border">
+                  <a key={i} href={m.url} className="group block overflow-hidden rounded-xl ring-1 ring-border">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={m.posterUrl} alt="" loading="lazy" className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105 motion-reduce:transition-none" />
                   </a>

@@ -140,7 +140,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
                         href={`#plan-${plan.id}`}
                         data-c={i}
                         data-default={i === def ? '' : undefined}
-                        className="group relative flex flex-col rounded-3xl border-[1.5px] border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/60 motion-reduce:transform-none sm:p-6"
+                        className="group relative flex flex-col rounded-xl border-[1.5px] border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/60 motion-reduce:transform-none sm:p-6"
                       >
                         <span className="flex items-center justify-between gap-3">
                           <span lang={lang} className="truncate text-lg font-bold">{plan.label}</span>
@@ -151,7 +151,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
                           {plan.recurring ? t('recurring') : t('once')}
                         </span>
                         <span className="mt-6 text-4xl font-black tabular-nums tracking-tight">{formatPrice(format, plan.priceCents)}</span>
-                        <span className="mt-5 inline-flex h-10 items-center justify-center rounded-2xl bg-background text-sm font-bold ring-1 ring-border group-hover:ring-primary">
+                        <span className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-background text-sm font-bold ring-1 ring-border group-hover:ring-primary">
                           {tier.active ? tA('extendShort') : tA('choose')}
                         </span>
                       </a>
@@ -165,9 +165,9 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
                       id={`plan-${plan.id}`}
                       data-p={i}
                       data-default={i === def ? '' : undefined}
-                      className="mt-4 hidden scroll-mt-40 rounded-[2rem] border border-border bg-card p-6 sm:p-8"
+                      className="mt-4 hidden scroll-mt-40 rounded-xl border border-border bg-card p-6 sm:p-8"
                     >
-                      <div className="grid gap-6 lg:grid-cols-[1fr_24rem] lg:items-start">
+                      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
                         <div>
                           <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{tA('selected')}</p>
                           <p lang={lang} className="mt-1 text-2xl font-black tracking-tight">
@@ -218,7 +218,7 @@ export function Bundles({ ctx, bundles, confirm }: BundlesProps) {
             {bundles.map((b) => {
               const pics = b.items.filter((it) => it.imageUrl).slice(0, 4);
               return (
-                <article key={b.id} className="flex flex-col overflow-hidden rounded-[2rem] border border-border bg-card">
+                <article key={b.id} className="flex flex-col overflow-hidden rounded-xl border border-border bg-card">
                   <div className="relative aspect-[16/9] overflow-hidden bg-muted">
                     {pics.length >= 3 ? (
                       <div className="grid h-full grid-cols-3 grid-rows-2 gap-1">
@@ -287,7 +287,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
               const pct = Math.round(Math.min(1, w.progress) * 100);
               const done = w.state === 'fulfilled';
               return (
-                <article key={w.id} className={`flex flex-col overflow-hidden rounded-[2rem] border bg-card ${done ? 'border-emerald-500/60' : 'border-border'} ${w.state === 'expired' ? 'opacity-70' : ''}`}>
+                <article key={w.id} className={`flex flex-col overflow-hidden rounded-xl border bg-card ${done ? 'border-emerald-500/60' : 'border-border'} ${w.state === 'expired' ? 'opacity-70' : ''}`}>
                   {w.imageUrl && (
                     <div className="relative aspect-[16/9] overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -362,7 +362,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                       </p>
                     )}
                     {w.rewardText && (
-                      <p className="flex items-start gap-2.5 rounded-2xl bg-primary/10 px-4 py-3 text-sm">
+                      <p className="flex items-start gap-2.5 rounded-xl bg-primary/10 px-4 py-3 text-sm">
                         <Gift aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--brand-link,var(--primary))]" />
                         <span>{t('reward', { text: w.rewardText })}</span>
                       </p>
@@ -378,7 +378,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                       )}
                       {w.pendingTransfer && <BankBox bank={w.pendingTransfer} />}
                       {w.state === 'open' && w.support && (
-                        <form method="post" action={w.support.submit.action} className="space-y-4 rounded-3xl border border-border bg-background/60 p-5">
+                        <form method="post" action={w.support.submit.action} className="space-y-4 rounded-xl border border-border bg-background/60 p-5">
                           <FormFields target={w.support.submit} />
                           {w.support.fullGiftCents == null && (
                             <label className={label}>

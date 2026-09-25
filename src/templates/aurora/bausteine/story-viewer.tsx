@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent as RPointer
  * Story-Ansicht (Verbesserung mit JavaScript): Klick auf ein Element mit `data-story-open="<n>"`
  * (Avatar-Ring, Highlight-Kreise) öffnet die Story ab Folie n. Ohne JavaScript bleiben das normale
  * Links (href des Moments). Tippen links/rechts, Halten = Pause, nach unten wischen = schließen,
- * Pfeiltasten/Esc. Gesehene Ringe werden grau (`data-seen`, nur für diese Sitzung).
+ * Pfeiltasten/Esc. Gesehene Ringe werden grau (`data-seen`) — nur solange die Seite offen ist, ohne Speicher.
  */
 
 export interface StorySlide {
@@ -17,24 +17,19 @@ export interface StorySlide {
   title: string;
   text?: string;
   locked?: boolean;
+  /** Sprache des Titels (Inhalte des Models: `ctx.site.mainLanguage`). */
+  lang?: string;
   cta?: { label: string; href: string };
 }
 
 const DUR = 5000;
-const SEEN_KEY = 'aurora_story_seen';
+/** Gesehene Folien — nur im Speicher der offenen Seite (keine eigene Datenhaltung). */
+const seen = new Set<string>();
 
-function readSeen(): string[] {
-  try {
-    return JSON.parse(sessionStorage.getItem(SEEN_KEY) ?? '[]') as string[];
-  } catch {
-    return [];
-  }
-}
-
-function markRings(seen: string[]) {
+function markRings() {
   document.querySelectorAll<HTMLElement>('[data-story-ring]').forEach((el) => {
     const ids = (el.dataset.storyRing ?? '').split(' ').filter(Boolean);
-    const done = ids.length > 0 && ids.every((id) => seen.includes(id));
+    const done = ids.length > 0 && ids.every((id) => seen.has(id));
     if (done) el.dataset.seen = '';
     else delete el.dataset.seen;
     const hint = el.querySelector<HTMLElement>('[data-story-hint]');
@@ -62,18 +57,15 @@ export function StoryViewer({
   const closeBtn = useRef<HTMLButtonElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
 
-  const see = useCallback((i: number) => {
-    const s = slides[i];
-    if (!s) return;
-    const seen = readSeen();
-    if (!seen.includes(s.id)) {
-      seen.push(s.id);
-      try {
-        sessionStorage.setItem(SEEN_KEY, JSON.stringify(seen));
-      } catch {}
-    }
-    markRings(seen);
-  }, [slides]);
+  const see = useCallback(
+    (i: number) => {
+      const s = slides[i];
+      if (!s) return;
+      seen.add(s.id);
+      markRings();
+    },
+    [slides]
+  );
 
   const show = useCallback(
     (i: number) => {
@@ -93,7 +85,7 @@ export function StoryViewer({
 
   // Öffnen per Klick auf [data-story-open] — der Link dahinter ist der Weg ohne JavaScript.
   useEffect(() => {
-    markRings(readSeen());
+    markRings();
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
       const el = (e.target as HTMLElement).closest<HTMLElement>('[data-story-open]');
@@ -158,7 +150,7 @@ export function StoryViewer({
       role="dialog"
       aria-modal="true"
       aria-label={labels.title}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl [animation:aurora-fade_.25s_ease]"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl [animation:aurora-fade_.25s_ease] motion-reduce:[animation:none]"
       onClick={(e) => e.target === e.currentTarget && close()}
     >
       <style>{`@keyframes aurora-bar{from{width:0}to{width:100%}}@keyframes aurora-fade{from{opacity:0}}@keyframes aurora-pop{from{opacity:0;transform:scale(.94)}}`}</style>
@@ -168,7 +160,7 @@ export function StoryViewer({
       </button>
 
       <div
-        className="relative h-[100dvh] w-screen touch-none select-none overflow-hidden bg-card text-white shadow-[0_40px_120px_-30px_var(--primary)] [animation:aurora-pop_.35s_cubic-bezier(.34,1.4,.64,1)] sm:h-[min(92dvh,calc(26.25rem*16/9))] sm:w-[26.25rem] sm:rounded-[1.5rem]"
+        className="relative h-[100dvh] w-screen touch-none select-none overflow-hidden bg-card text-white shadow-[0_40px_120px_-30px_var(--primary)] [animation:aurora-pop_.35s_cubic-bezier(.34,1.4,.64,1)] motion-reduce:[animation:none] sm:h-[min(92dvh,calc(26.25rem*16/9))] sm:w-[26.25rem] sm:rounded-xl"
         style={{ transform: drag ? `translateY(${drag}px)` : undefined, opacity: drag ? Math.max(0.4, 1 - drag / 400) : undefined }}
         onPointerDown={down}
         onPointerMove={move}
@@ -183,7 +175,7 @@ export function StoryViewer({
         {slide.image ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img key={slide.id} src={slide.image} alt="" className={`absolute inset-0 h-full w-full object-cover [animation:aurora-fade_.35s_ease] ${slide.locked ? 'scale-110 blur-2xl brightness-50' : ''}`} />
+            <img key={slide.id} src={slide.image} alt="" className={`absolute inset-0 h-full w-full object-cover [animation:aurora-fade_.35s_ease] motion-reduce:[animation:none] ${slide.locked ? 'brightness-75' : ''}`} />
           </>
         ) : (
           <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(80%_60%_at_30%_20%,var(--primary),transparent_70%),radial-gradient(70%_60%_at_80%_90%,var(--accent),transparent_70%)] opacity-70" />
@@ -234,12 +226,12 @@ export function StoryViewer({
         )}
 
         {/* Text */}
-        <div key={slide.id} className="absolute inset-x-5 bottom-[calc(1.75rem+env(safe-area-inset-bottom,0px))] z-10 [animation:aurora-fade_.4s_ease]">
+        <div key={slide.id} className="absolute inset-x-5 bottom-[calc(1.75rem+env(safe-area-inset-bottom,0px))] z-10 [animation:aurora-fade_.4s_ease] motion-reduce:[animation:none]">
           <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[color:var(--brand-link,var(--primary))] [text-shadow:0_1px_8px_rgba(0,0,0,.6)]">{slide.eyebrow}</p>
-          <h3 className="mt-1.5 text-[2rem] font-black leading-[1.02] tracking-tight [text-shadow:0_2px_20px_rgba(0,0,0,.5)]">{slide.title}</h3>
+          <h3 lang={slide.lang} className="mt-1.5 text-[2rem] font-black leading-[1.02] tracking-tight [text-shadow:0_2px_20px_rgba(0,0,0,.5)]">{slide.title}</h3>
           {slide.text && <p className="mt-2 text-[15px] text-white/80">{slide.text}</p>}
           {slide.cta && (
-            <a href={slide.cta.href} className="mt-5 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-primary-foreground shadow-2xl shadow-black/50 transition hover:opacity-90">
+            <a href={slide.cta.href} className="mt-5 inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-6 text-sm font-bold text-primary-foreground shadow-2xl shadow-black/50 transition hover:opacity-90">
               {slide.cta.label}
               <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </a>

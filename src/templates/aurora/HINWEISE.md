@@ -23,8 +23,8 @@ Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klasse
 - **Story + Highlights** (`bausteine/story-viewer.tsx`, Client-Komponente als Verbesserung): Avatar mit drehendem
   Ring und „Story"-Label öffnet die Story (alle Momente → neuester Inhalt → Abo-Folie); die Highlight-Kreise
   (Momente) öffnen dieselbe Ansicht an ihrer Stelle. Tippen links/rechts, Halten = Pause, nach unten wischen =
-  schließen, Pfeiltasten/Esc, 5 s pro Folie. Gesehene Ringe werden grau („Gesehen", nur für die Sitzung,
-  sessionStorage). Ohne JavaScript bleiben es die normalen Links (`href` des Moments).
+  schließen, Pfeiltasten/Esc, 5 s pro Folie. Gesehene Ringe werden grau („Gesehen") — nur solange die Seite
+  offen ist, ohne Speicher (keine eigene Datenhaltung). Dauerhaft „gesehen" bräuchte ein Feld im Vertrag (`seen`). Ohne JavaScript bleiben es die normalen Links (`href` des Moments).
 
 - **Bundle-Vorschau:** Collage der enthaltenen Inhalte (nutzt `bundle.items`; ohne Items Farbverlauf).
 - **Weitere Inhalte** auf der Inhaltsseite (`related`, max. 4 Kacheln).

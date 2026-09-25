@@ -46,7 +46,7 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
   return (
     <Shell ctx={ctx}>
       <Page width="max-w-3xl">
-        <div className="relative flex flex-col gap-5 overflow-hidden rounded-[2rem] border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+        <div className="relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-primary/25 blur-3xl" />
           <div className="relative flex min-w-0 items-center gap-4">
             <span aria-hidden="true" className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-2xl font-black text-primary-foreground">{fan.displayName.charAt(0)}</span>
@@ -64,13 +64,13 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
         </div>
         <nav className="mt-5 flex flex-wrap gap-2 text-sm">
           {links.wallet && fan.walletCents != null && (
-            <a href={links.wallet} className="inline-flex h-10 items-center rounded-full bg-primary px-4 font-semibold text-primary-foreground">
+            <a href={links.wallet} className="inline-flex h-10 items-center rounded-lg bg-primary px-4 font-semibold text-primary-foreground">
               {t('wallet', { amount: formatPrice(format, fan.walletCents) })}
             </a>
           )}
-          <a href={links.notifications} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('notifications')}</a>
-          <a href={links.payments} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('payments')}</a>
-          <a href={links.password} className="inline-flex h-10 items-center rounded-full bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('password')}</a>
+          <a href={links.notifications} className="inline-flex h-10 items-center rounded-lg bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('notifications')}</a>
+          <a href={links.payments} className="inline-flex h-10 items-center rounded-lg bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('payments')}</a>
+          <a href={links.password} className="inline-flex h-10 items-center rounded-lg bg-card px-4 font-semibold ring-1 ring-border hover:ring-primary">{t('password')}</a>
         </nav>
 
         <Section title={t('mySubscriptions')}>
@@ -136,7 +136,7 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             <div className="mt-4 space-y-1">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">{t('past')}</p>
               {pastSubscriptions.map((p) => (
-                <p key={p.endedAt} className="rounded-2xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
+                <p key={p.endedAt} className="rounded-xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
                   {p.tierName} · {t('endedAt', { date: date(p.endedAt) })}
                 </p>
               ))}
@@ -153,7 +153,7 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             <ul className="space-y-2">
               {purchases.map((p) => (
                 <li key={p.href}>
-                  <a href={p.href} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-3 transition hover:border-primary">
+                  <a href={p.href} className="flex items-center gap-4 rounded-xl border border-border bg-card p-3 transition hover:border-primary">
                     {p.imageUrl && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={p.imageUrl} alt="" className="h-14 w-14 rounded-xl object-cover" />
@@ -174,7 +174,7 @@ export function Profile({ ctx, subscriptions, pastSubscriptions, purchases, requ
             ) : (
               <ul className="space-y-2 text-sm">
                 {requests.map((r, i) => (
-                  <li key={i} className="flex justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+                  <li key={i} className="flex justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
                     <span className="truncate">{r.description}</span>
                     <span className="shrink-0 text-muted-foreground">
                       {tr(`status.${r.status}`)} · {formatPrice(format, r.offeredCents)}
@@ -195,7 +195,7 @@ function PaymentRow({ p }: { p: PaymentEntry }) {
   const format = useFormatter();
   const farbe = { pending: 'bg-amber-400 text-amber-950', paid: 'bg-emerald-600 text-white', failed: 'bg-zinc-500 text-white', refunded: 'bg-amber-600 text-white' }[p.status];
   return (
-    <div className="space-y-3 rounded-3xl border border-border bg-card p-5">
+    <div className="space-y-3 rounded-xl border border-border bg-card p-5">
       <div className="flex items-start justify-between gap-3 text-sm">
         <div className="min-w-0">
           {p.href ? <a href={p.href} className="font-bold hover:underline">{p.title}</a> : <span className="font-bold">{p.title}</span>}
@@ -268,7 +268,7 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
         {state === 'test' && <Box kind="info">{t('test')}</Box>}
         {state === 'ok' && (
           <>
-            <div className="relative space-y-2 overflow-hidden rounded-[2rem] bg-gradient-to-br from-primary via-primary/80 to-accent p-7 text-primary-foreground shadow-2xl shadow-primary/30 sm:p-9">
+            <div className="relative space-y-2 overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary/80 to-accent p-7 text-primary-foreground shadow-2xl shadow-primary/30 sm:p-9">
               <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary-foreground/15 blur-2xl" />
               <p className="relative text-sm font-semibold opacity-85">{t('title', { name: ctx.site.displayName })}</p>
               <p className="relative text-6xl font-black tabular-nums tracking-tight">{formatPrice(format, balanceCents)}</p>
@@ -278,7 +278,7 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
               <Section title={t('pending')}>
                 <ul className="space-y-2 text-sm">
                   {pendingTopups.map((p) => (
-                    <li key={p.id} className="flex justify-between rounded-2xl border border-border bg-card px-4 py-3">
+                    <li key={p.id} className="flex justify-between rounded-xl border border-border bg-card px-4 py-3">
                       <span>
                         {p.method} · {format.dateTime(new Date(p.createdAt), 'dateNumeric')}
                       </span>
@@ -318,7 +318,7 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
               {transactions.length === 0 ? (
                 <Empty>{t('noTx')}</Empty>
               ) : (
-                <ul className="divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
+                <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
                   {transactions.map((tx) => (
                     <li key={tx.id} className="flex items-center justify-between gap-3 px-5 py-4 text-sm">
                       <div className="min-w-0">
@@ -368,7 +368,7 @@ export function Notifications({ ctx, items, markAll }: NotificationsProps) {
         ) : (
           <div className="space-y-3">
             {items.map((n) => (
-              <div key={n.id} className={`relative rounded-3xl border bg-card p-5 pl-7 ${n.read ? 'border-border opacity-70' : 'border-primary/50 shadow-lg shadow-primary/10'}`}>
+              <div key={n.id} className={`relative rounded-xl border bg-card p-5 pl-7 ${n.read ? 'border-border opacity-70' : 'border-primary/50 shadow-lg shadow-primary/10'}`}>
                 {!n.read && <span aria-hidden="true" className="absolute left-3 top-6 h-2 w-2 rounded-full bg-primary" />}
                 <div className="flex items-start justify-between gap-3">
                   <p className="font-bold">{n.title}</p>

@@ -17,7 +17,7 @@ import { Box, btn, input, Page } from '../bausteine/ui';
 
 function AuthCard({ title, form, children, footer }: { title: string; form: AuthForm; children: ReactNode; footer?: ReactNode }) {
   return (
-    <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+    <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
       <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
       <h1 className="relative mb-7 text-3xl font-black tracking-tight">{title}</h1>
@@ -166,7 +166,7 @@ export function VerifyEmail({ ctx, state, confirm, resend }: VerifyEmailProps) {
   const t = useTranslations('auth');
   return (
     <Shell ctx={ctx} bare>
-      <div className="relative w-full max-w-md space-y-5 overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+      <div className="relative w-full max-w-md space-y-5 overflow-hidden rounded-xl border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
         <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
         <h1 className="relative text-3xl font-black tracking-tight">{t('verifyTitle')}</h1>
         {state === 'done' || state === 'already' ? <Box kind="success">{t(`verify.${state}`)}</Box> : <p className="text-sm">{t(`verify.${state}`)}</p>}
@@ -205,7 +205,7 @@ export function TermsConsent({ ctx, changed, alreadyAccepted, termsMarkdown, for
   const t = useTranslations('auth');
   return (
     <Shell ctx={ctx} bare>
-      <div className="relative w-full max-w-2xl space-y-6 overflow-hidden rounded-[2rem] border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
+      <div className="relative w-full max-w-2xl space-y-6 overflow-hidden rounded-xl border border-border bg-card/80 p-7 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-9">
         <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
         <h1 className="relative text-3xl font-black tracking-tight">{changed ? t('termsTitleChanged') : t('termsTitleFirst')}</h1>
         {alreadyAccepted ? (
@@ -218,7 +218,7 @@ export function TermsConsent({ ctx, changed, alreadyAccepted, termsMarkdown, for
         ) : (
           <form method="post" action={form.submit.action} className="space-y-4">
             <FormFields target={form.submit} />
-            <div className="max-h-[50vh] overflow-y-auto rounded-2xl border border-border bg-background/60 p-5 text-sm leading-6">
+            <div className="max-h-[50vh] overflow-y-auto rounded-xl border border-border bg-background/60 p-5 text-sm leading-6">
               <RichText markdown={termsMarkdown} lang="de" />
             </div>
             <label className="flex items-start gap-2 text-sm">

@@ -17,7 +17,7 @@ export function PurchasePanel({ panel }: PurchasePanelProps) {
   const format = useFormatter();
   const preis = formatPrice(format, panel.priceCents);
   const s = panel.state;
-  const full = 'w-full whitespace-normal text-center';
+  const full = 'w-full';
   return (
     <div className="space-y-4">
       {s.kind === 'guest' && (
@@ -28,7 +28,7 @@ export function PurchasePanel({ panel }: PurchasePanelProps) {
       {s.kind === 'not_configured' && <Box kind="info">{t('notConfigured')}</Box>}
       {s.kind === 'email_unverified' && <Box kind="warning">{t('emailUnverified')}</Box>}
       {s.kind === 'test' && (
-        <a href={s.confirmHref} className={`inline-flex h-11 w-full items-center justify-center rounded-full border-2 border-dashed border-sky-500 px-5 text-sm font-semibold ${full}`}>
+        <a href={s.confirmHref} className={`inline-flex h-11 w-full items-center justify-center rounded-lg border-2 border-dashed border-sky-500 px-5 text-sm font-semibold ${full}`}>
           {t('test', { price: preis })}
         </a>
       )}
@@ -44,7 +44,7 @@ export function PurchasePanel({ panel }: PurchasePanelProps) {
             </div>
           )}
           {s.wallet && !s.wallet.blocked && !s.wallet.enough && (
-            <p className="rounded-2xl bg-background/70 px-4 py-3 text-sm text-muted-foreground">
+            <p className="rounded-xl bg-background/70 px-4 py-3 text-sm text-muted-foreground">
               {t('walletShort', {
                 balance: formatPrice(format, s.wallet.balanceCents),
                 missing: formatPrice(format, panel.priceCents - s.wallet.balanceCents)

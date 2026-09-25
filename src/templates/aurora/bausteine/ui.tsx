@@ -8,16 +8,16 @@ import type { Flash } from '@/kit/types';
  * großem Radius. Nur Token-Klassen — Ausnahme: Zustandsfarben (grün/gelb/rot/blau), die keiner Farbwelt folgen.
  */
 
-const base = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition disabled:opacity-50';
+const base = 'inline-flex items-center justify-center gap-2 text-center rounded-lg font-semibold transition disabled:opacity-50';
 export const btn = {
-  primary: `${base} h-11 bg-primary px-6 text-sm text-primary-foreground shadow-lg shadow-primary/25 hover:opacity-90`,
-  outline: `${base} h-11 bg-card px-5 text-sm ring-1 ring-border hover:ring-primary`,
-  small: `${base} h-8 bg-card px-3.5 text-xs ring-1 ring-border hover:ring-primary`,
-  large: `${base} h-14 bg-primary px-8 text-base text-primary-foreground shadow-xl shadow-primary/30 hover:opacity-90`
+  primary: `${base} min-h-11 py-2.5 bg-primary px-6 text-sm text-primary-foreground shadow-lg shadow-primary/25 hover:opacity-90`,
+  outline: `${base} min-h-11 py-2.5 bg-card px-5 text-sm ring-1 ring-border hover:ring-primary`,
+  small: `${base} min-h-8 py-1.5 bg-card px-3.5 text-xs ring-1 ring-border hover:ring-primary`,
+  large: `${base} min-h-14 py-3 bg-primary px-8 text-base text-primary-foreground shadow-xl shadow-primary/30 hover:opacity-90`
 };
 
 export const input =
-  'w-full rounded-xl border border-border bg-background/60 px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15';
+  'w-full rounded-lg border border-border bg-background/60 px-4 py-2.5 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15';
 
 export const label = 'block text-sm font-semibold';
 
@@ -52,12 +52,12 @@ export function Title({ children }: { children: ReactNode }) {
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-3xl border border-border bg-card p-6 text-card-foreground ${className}`}>{children}</div>;
+  return <div className={`rounded-xl border border-border bg-card p-6 text-card-foreground ${className}`}>{children}</div>;
 }
 
 export function Empty({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-border px-6 py-16 text-center">
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border px-6 py-16 text-center">
       <span aria-hidden="true" className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 blur-[1px]" />
       <p className="max-w-sm text-sm text-muted-foreground">{children}</p>
     </div>
@@ -75,7 +75,7 @@ const FLASH: Record<Flash['kind'], { cls: string; Icon: typeof Info }> = {
 export function Box({ kind, children }: { kind: Flash['kind']; children: ReactNode }) {
   const { cls, Icon } = FLASH[kind];
   return (
-    <div className={`flex items-start gap-2.5 rounded-2xl border px-4 py-3 text-sm ${cls}`}>
+    <div className={`flex items-start gap-2.5 rounded-xl border px-4 py-3 text-sm ${cls}`}>
       <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
       <div className="min-w-0">{children}</div>
     </div>

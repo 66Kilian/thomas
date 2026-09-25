@@ -15,7 +15,7 @@ export function BankBox({ bank }: { bank: BankDetails }) {
     </div>
   );
   return (
-    <div className="space-y-3 rounded-2xl border border-amber-500/50 bg-amber-500/10 p-4 text-sm">
+    <div className="space-y-3 rounded-xl border border-amber-500/50 bg-amber-500/10 p-4 text-sm">
       <p className="flex items-center gap-2 font-semibold">
         <Landmark aria-hidden="true" className="h-4 w-4 text-amber-500" />
         {t('bankIntro', { amount: formatPrice(format, bank.amountCents) })}

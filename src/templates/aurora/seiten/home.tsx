@@ -41,11 +41,12 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           image: m.thumbUrl,
           eyebrow: m.locked ? tA('storyLocked') : t('moments'),
           title: m.caption,
+          lang: s.mainLanguage,
           locked: m.locked,
           cta: m.locked ? { label: tA('storyLockedCta'), href: ctx.links.subscriptions } : undefined
         })),
         ...(newest
-          ? [{ id: `neu-${newest.slug}`, image: newest.imageLargeUrl ?? newest.imageUrl, eyebrow: tA('storyNew'), title: newest.title, cta: { label: tA('storyWatch'), href: newest.href } }]
+          ? [{ id: `neu-${newest.slug}`, image: newest.imageLargeUrl ?? newest.imageUrl, eyebrow: tA('storyNew'), title: newest.title, lang: s.mainLanguage, cta: { label: tA('storyWatch'), href: newest.href } }]
           : []),
         ...(s.subscriptionFromCents != null
           ? [{ id: 'abo', image: s.coverUrl, eyebrow: tA('storyAboEyebrow'), title: tA('storyAboTitle', { price: formatPrice(format, s.subscriptionFromCents) }), cta: { label: tA('storyAboCta'), href: ctx.links.subscriptions } }]
@@ -125,7 +126,7 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
             {s.subscriptionFromCents != null && (
               <a
                 href={ctx.links.subscriptions}
-                className="group inline-flex h-14 items-center justify-center gap-3 rounded-full bg-primary pl-7 pr-2 text-base font-bold text-primary-foreground shadow-2xl shadow-primary/40 transition hover:opacity-95"
+                className="group inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary pl-7 pr-2 text-base font-bold text-primary-foreground shadow-2xl shadow-primary/40 transition hover:opacity-95"
               >
                 {t('subscribeFrom', { price: formatPrice(format, s.subscriptionFromCents) })}
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground/15 transition group-hover:translate-x-0.5">
@@ -244,10 +245,10 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
                     name="q"
                     defaultValue={search.value}
                     placeholder={t('searchPlaceholder')}
-                    className="h-11 w-full rounded-full border border-border bg-card/70 pl-11 pr-24 text-sm backdrop-blur placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                    className="h-11 w-full rounded-lg border border-border bg-card/70 pl-11 pr-24 text-sm backdrop-blur placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                   />
                 </label>
-                <button type="submit" className="absolute right-1 top-1 inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground">
+                <button type="submit" className="absolute right-1 top-1 inline-flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground">
                   {t('searchButton')}
                 </button>
               </form>
@@ -291,7 +292,7 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
 }
 
 function PageLink({ href, label, dir }: { href: string | null; label: string; dir: 'prev' | 'next' }) {
-  const cls = 'inline-flex h-11 items-center gap-2 rounded-full bg-card px-5 font-semibold ring-1 ring-border hover:ring-primary';
+  const cls = 'inline-flex h-11 items-center gap-2 rounded-lg bg-card px-5 font-semibold ring-1 ring-border hover:ring-primary';
   const inner = (
     <>
       {dir === 'prev' && <ChevronLeft aria-hidden="true" className="h-4 w-4" />}

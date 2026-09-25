@@ -102,7 +102,7 @@ function Header({ ctx }: { ctx: PageContext }) {
     <header className="sticky top-0 z-40 isolate px-3 pt-3 sm:px-4">
       <div className="relative mx-auto max-w-6xl px-3 sm:px-4">
         {/* Glas-Fläche als eigene Ebene: backdrop-filter am Elternteil würde das feste Klappmenü einfangen. */}
-        <span aria-hidden="true" className="absolute inset-0 -z-10 rounded-2xl border border-border/70 bg-background/70 shadow-xl shadow-black/15 backdrop-blur-xl" />
+        <span aria-hidden="true" className="absolute inset-0 -z-10 rounded-xl border border-border/70 bg-background/70 shadow-xl shadow-black/15 backdrop-blur-xl" />
         <div className="flex h-14 items-center gap-3">
           <Brand ctx={ctx} />
           <div className="flex shrink-0 items-center gap-2">
@@ -157,7 +157,7 @@ function Header({ ctx }: { ctx: PageContext }) {
                 <X aria-hidden="true" className="hidden h-5 w-5 group-open:block" />
               </summary>
               <div className="fixed inset-x-0 bottom-0 top-[4.75rem] z-50 bg-black/55 px-3 pt-2">
-                <nav className="max-h-full overflow-y-auto rounded-2xl border border-border bg-card p-2 text-card-foreground shadow-2xl">
+                <nav className="max-h-full overflow-y-auto rounded-xl border border-border bg-card p-2 text-card-foreground shadow-2xl">
                   <MenuLinks ctx={ctx} mobile />
                   <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 pb-2 pt-4">
                     {fan ? (
@@ -192,7 +192,7 @@ function Footer({ ctx }: { ctx: PageContext }) {
   const t = useTranslations('shell');
   return (
     <footer className="mt-24 px-3 pb-6 sm:px-4">
-      <div className="mx-auto flex max-w-6xl flex-col gap-5 rounded-2xl border border-border bg-card/60 px-5 py-6 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+      <div className="mx-auto flex max-w-6xl flex-col gap-5 rounded-xl border border-border bg-card/60 px-5 py-6 text-sm text-muted-foreground sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <span className="font-semibold text-foreground">{t('rights', { year: 2026, name: ctx.site.displayName })}</span>
         <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <a href={ctx.links.imprint} className="hover:text-foreground">{t('imprint')}</a>

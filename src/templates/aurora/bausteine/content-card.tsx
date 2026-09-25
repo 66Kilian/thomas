@@ -22,9 +22,9 @@ export function ContentCard({ ctx, card, size = 'small' }: ContentCardProps) {
   const bild = large ? card.imageLargeUrl ?? card.imageUrl : card.imageUrl;
   const chip = 'absolute z-10 inline-flex h-7 items-center gap-1 rounded-full bg-black/55 px-2.5 text-[11px] font-semibold text-white backdrop-blur-md';
   return (
-    <a href={card.href} title={card.title} className="group flex h-full flex-col gap-3 rounded-2xl outline-offset-4">
+    <a href={card.href} title={card.title} className="group flex h-full flex-col gap-3 rounded-xl outline-offset-4">
       <div
-        className={`relative overflow-hidden rounded-2xl bg-muted ring-1 ring-border transition duration-300 group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:shadow-primary/25 group-hover:ring-primary/60 motion-reduce:transform-none ${
+        className={`relative overflow-hidden rounded-xl bg-muted ring-1 ring-border transition duration-300 group-hover:-translate-y-1 group-hover:shadow-2xl group-hover:shadow-primary/25 group-hover:ring-primary/60 motion-reduce:transform-none ${
           large ? 'aspect-[3/4] sm:aspect-auto sm:min-h-[18rem] sm:flex-1' : 'aspect-[3/4]'
         }`}
       >

@@ -37,7 +37,7 @@ function DateTile({ iso, large, muted }: { iso: string; large?: boolean; muted?:
   const d = new Date(iso);
   return (
     <div
-      className={`flex shrink-0 flex-col items-center justify-center rounded-2xl text-center ${large ? 'h-28 w-24' : 'h-20 w-[4.5rem]'} ${
+      className={`flex shrink-0 flex-col items-center justify-center rounded-xl text-center ${large ? 'h-28 w-24' : 'h-20 w-[4.5rem]'} ${
         muted ? 'bg-card text-muted-foreground ring-1 ring-border' : 'bg-gradient-to-b from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/25'
       }`}
     >
@@ -60,7 +60,7 @@ function EventRow({ e, lang }: { e: EventItem; lang: string }) {
   const ort = place(e);
   const act = 'inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-4 text-xs font-bold';
   return (
-    <article className={`group rounded-3xl border border-border bg-card p-4 transition hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10 sm:p-5 ${off ? 'opacity-70' : ''}`}>
+    <article className={`group rounded-xl border border-border bg-card p-4 transition hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10 sm:p-5 ${off ? 'opacity-70' : ''}`}>
       <div className="flex gap-4 sm:gap-5">
         <DateTile iso={e.startAt} muted={off} />
         <div className="min-w-0 flex-1 space-y-1.5">
@@ -92,7 +92,7 @@ function EventRow({ e, lang }: { e: EventItem; lang: string }) {
         </div>
         {e.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={e.imageUrl} alt="" className="hidden h-24 w-36 shrink-0 rounded-2xl object-cover md:block" />
+          <img src={e.imageUrl} alt="" className="hidden h-24 w-36 shrink-0 rounded-xl object-cover md:block" />
         )}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4 sm:pl-[5.75rem]">
@@ -130,7 +130,7 @@ function NextEvent({ e, lang }: { e: EventItem; lang: string }) {
   const tA = useTranslations('tpl_aurora');
   const ort = place(e);
   return (
-    <article className="group relative overflow-hidden rounded-[2rem] border border-primary/40 bg-card shadow-2xl shadow-primary/15">
+    <article className="group relative overflow-hidden rounded-xl border border-primary/40 bg-card shadow-2xl shadow-primary/15">
       {e.imageUrl ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -181,13 +181,13 @@ function NextEvent({ e, lang }: { e: EventItem; lang: string }) {
             </a>
           )}
           {e.calendarHref && (
-            <a href={e.calendarHref} className="inline-flex h-11 items-center gap-2 rounded-full bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
+            <a href={e.calendarHref} className="inline-flex h-11 items-center gap-2 rounded-lg bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
               <CalendarPlus aria-hidden="true" className="h-4 w-4" />
               {tA('calendar')}
             </a>
           )}
           {e.location.mapHref && !e.online && (
-            <a href={e.location.mapHref} className="inline-flex h-11 items-center gap-2 rounded-full bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
+            <a href={e.location.mapHref} className="inline-flex h-11 items-center gap-2 rounded-lg bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
               <MapIcon aria-hidden="true" className="h-4 w-4" />
               {tA('map')}
             </a>
@@ -265,7 +265,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
             <label>
               <span className="sr-only">{t('filterPlaceholder')}</span>
               <Search aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input name="stadt" defaultValue={cities.some((c) => c.toLowerCase() === cityFilter.value.toLowerCase()) ? '' : cityFilter.value} placeholder={t('filterPlaceholder')} className={`${input} h-10 w-56 rounded-full pl-10`} />
+              <input name="stadt" defaultValue={cities.some((c) => c.toLowerCase() === cityFilter.value.toLowerCase()) ? '' : cityFilter.value} placeholder={t('filterPlaceholder')} className={`${input} h-10 w-56 rounded-lg pl-10`} />
             </label>
           </form>
         </div>
@@ -273,7 +273,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
 
       <Page width="max-w-4xl">
         {near && (
-          <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-border bg-card p-6 sm:p-8">
+          <section className="relative mb-12 overflow-hidden rounded-xl border border-border bg-card p-6 sm:p-8">
             <div aria-hidden="true" className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl" />
             <div className="relative grid gap-6 lg:grid-cols-[1fr_20rem]">
               <div className="space-y-4">
@@ -294,7 +294,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
                   <ul className="space-y-2">
                     {near.events.map((e) => (
                       <li key={e.id}>
-                        <a href={e.href} className="flex items-center gap-3 rounded-2xl bg-background/70 px-4 py-3 text-sm hover:ring-1 hover:ring-primary">
+                        <a href={e.href} className="flex items-center gap-3 rounded-xl bg-background/70 px-4 py-3 text-sm hover:ring-1 hover:ring-primary">
                           <span className="font-bold tabular-nums">{format.dateTime(new Date(e.startAt), 'dateTimeShort')}</span>
                           <span lang={lang} className="truncate">{e.title}</span>
                         </a>
@@ -362,10 +362,10 @@ export function EventDetail({ ctx, event: e, backHref }: EventDetailProps) {
 
         {e.imageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={e.imageUrl} alt="" className="mb-10 aspect-[21/9] w-full rounded-[2rem] object-cover" />
+          <img src={e.imageUrl} alt="" className="mb-10 aspect-[21/9] w-full rounded-xl object-cover" />
         )}
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
           <div className="order-2 lg:order-1">{e.description && <RichText markdown={e.description} lang={lang} />}</div>
 
           <aside className="order-1 space-y-4 lg:sticky lg:top-40 lg:order-2">
@@ -453,7 +453,7 @@ export function Auctions({ ctx, auctions }: AuctionsProps) {
             {auctions.map((a) => {
               const open = a.state.kind === 'open';
               return (
-                <a key={a.id} href={a.href} className="group flex flex-col overflow-hidden rounded-3xl border border-border bg-card transition hover:-translate-y-1 hover:border-primary hover:shadow-2xl hover:shadow-primary/15 motion-reduce:transform-none">
+                <a key={a.id} href={a.href} className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition hover:-translate-y-1 hover:border-primary hover:shadow-2xl hover:shadow-primary/15 motion-reduce:transform-none">
                   <div className="relative aspect-[4/3] overflow-hidden bg-muted">
                     {a.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -501,16 +501,16 @@ export function AuctionDetail({ ctx, auction: a, backHref, confirm, flash }: Auc
     <Shell ctx={ctx}>
       <Page width="max-w-6xl">
         <PageHead back={{ href: backHref, label: tA('allAuctions') }} title={a.title} lang={lang} />
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start">
           <div className="space-y-8">
             {a.imageUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={a.imageUrl} alt="" className="aspect-[4/3] w-full rounded-[2rem] object-cover" />
+              <img src={a.imageUrl} alt="" className="aspect-[4/3] w-full rounded-xl object-cover" />
             )}
             <RichText markdown={a.description} lang={lang} />
           </div>
           <aside className="lg:sticky lg:top-40">
-            <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-6">
+            <div className="relative overflow-hidden rounded-xl border border-border bg-card p-6">
               <div aria-hidden="true" className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-primary/25 blur-3xl" />
               <div className="relative space-y-5">
                 <div>
@@ -597,7 +597,7 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
       <Page width="max-w-5xl">
         <PageHead eyebrow={tA('requestsEyebrow')} title={t('title')} sub={<span lang={lang}>{intro}</span>} />
         <div className="grid gap-10 lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start">
-          <form method="post" action={create.action} className="relative space-y-5 overflow-hidden rounded-[2rem] border border-border bg-card p-6 lg:sticky lg:top-40">
+          <form method="post" action={create.action} className="relative space-y-5 overflow-hidden rounded-xl border border-border bg-card p-6 lg:sticky lg:top-40">
             <div aria-hidden="true" className="absolute -left-16 -top-16 h-44 w-44 rounded-full bg-primary/20 blur-3xl" />
             <FormFields target={create} />
             <label className={`relative ${label}`}>
@@ -628,7 +628,7 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
             ) : (
               <div className="space-y-5">
                 {requests.map((r) => (
-                  <article key={r.id} className="space-y-4 rounded-3xl border border-border bg-card p-5">
+                  <article key={r.id} className="space-y-4 rounded-xl border border-border bg-card p-5">
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm leading-6">{r.description}</p>
                       <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ${STATUS[r.status]}`}>{t(`status.${r.status}`)}</span>
@@ -651,11 +651,11 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
                         </form>
                       )}
                     </div>
-                    <div className="space-y-2 rounded-2xl bg-background/60 p-3">
+                    <div className="space-y-2 rounded-xl bg-background/60 p-3">
                       {r.messages.length === 0 && <p className="px-1 text-xs text-muted-foreground">{t('noMessages')}</p>}
                       {r.messages.map((m, i) => (
                         <div key={i} className={`flex ${m.from === 'fan' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[85%] rounded-3xl px-4 py-2.5 text-sm ${m.from === 'fan' ? 'rounded-br-md bg-primary text-primary-foreground' : 'rounded-bl-md bg-card ring-1 ring-border'}`}>
+                          <div className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm ${m.from === 'fan' ? 'rounded-br-md bg-primary text-primary-foreground' : 'rounded-bl-md bg-card ring-1 ring-border'}`}>
                             <p>{m.body}</p>
                             <p className="mt-1 text-[10px] opacity-70">
                               {m.from === 'fan' ? t('you') : t('model')} · {format.dateTime(new Date(m.at), 'dateTimeNumeric')}
@@ -668,9 +668,9 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
                           <FormFields target={r.reply} />
                           <label className="block flex-1">
                             <span className="sr-only">{t('messagePlaceholder')}</span>
-                            <input name="body" placeholder={t('messagePlaceholder')} className={`${input} h-11 rounded-full pr-14`} />
+                            <input name="body" placeholder={t('messagePlaceholder')} className={`${input} h-11 rounded-lg pr-14`} />
                           </label>
-                          <button type="submit" aria-label={t('send')} className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                          <button type="submit" aria-label={t('send')} className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                             <Send aria-hidden="true" className="h-4 w-4" />
                           </button>
                         </form>

@@ -22,7 +22,7 @@ export function AgeGate({ ctx, confirm, leaveHref }: AgeGateProps) {
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black p-4 text-white">
       <div aria-hidden="true" className="absolute -left-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-primary/30 blur-[120px]" />
       <div aria-hidden="true" className="absolute -bottom-40 -right-40 h-[28rem] w-[28rem] rounded-full bg-accent/20 blur-[120px]" />
-      <div className="relative w-full max-w-md space-y-7 rounded-[2rem] border border-white/15 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-xl sm:p-10">
+      <div className="relative w-full max-w-md space-y-7 rounded-xl border border-white/15 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-xl sm:p-10">
         {ctx.languageLinks.length > 1 && (
           <nav className="absolute right-5 top-5 inline-flex rounded-full border border-white/20 p-0.5 text-xs font-bold" aria-label={ts('language')}>
             {ctx.languageLinks.map((l) => (
@@ -50,12 +50,12 @@ export function AgeGate({ ctx, confirm, leaveHref }: AgeGateProps) {
         </div>
         <form method="post" action={confirm.action}>
           <FormFields target={confirm} />
-          <button type="submit" className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-base font-bold text-black transition hover:bg-white/90">
+          <button type="submit" className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-white px-6 text-base font-bold text-black transition hover:bg-white/90">
             {t('enter')}
             <ArrowRight aria-hidden="true" className="h-5 w-5" />
           </button>
         </form>
-        <a href={leaveHref} className="inline-flex h-11 w-full items-center justify-center rounded-full border border-white/20 px-4 text-sm font-semibold text-white/80 hover:bg-white/10">
+        <a href={leaveHref} className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-white/20 px-4 text-sm font-semibold text-white/80 hover:bg-white/10">
           {t('leave')}
         </a>
         <nav className="flex justify-center gap-5 text-xs text-white/55">
@@ -94,7 +94,7 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
       {/* Titelbild als Band — Schrift steht darunter, nie im Bild. */}
       {s.coverUrl ? (
         <div className="relative mx-auto mt-4 max-w-6xl px-4">
-          <div className="relative h-48 overflow-hidden rounded-[2rem] sm:h-72">
+          <div className="relative h-48 overflow-hidden rounded-xl sm:h-72">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={s.coverUrl} alt="" className="h-full w-full object-cover" />
             <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -137,7 +137,7 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
 
         {/* Inhalt */}
         <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
-          <article className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-7 sm:p-12">
+          <article className="relative overflow-hidden rounded-xl border border-border bg-card p-7 sm:p-12">
             <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
             <p className="relative text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{s.displayName}</p>
             <h1 lang={s.mainLanguage} className="relative mt-3 break-words pt-1 text-4xl font-black leading-tight tracking-tight sm:text-5xl">
@@ -149,14 +149,14 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
                 <Box kind="info">{languageNote}</Box>
               </div>
             )}
-            <div className="relative mt-8 max-w-2xl text-[17px] leading-8 [&_.rich-text_img]:my-8 [&_.rich-text_img]:rounded-3xl [&_.rich-text_p:first-child]:text-xl [&_.rich-text_p:first-child]:font-semibold [&_.rich-text_p:first-child]:leading-9">
+            <div className="relative mt-8 max-w-2xl text-[17px] leading-8 [&_.rich-text_img]:my-8 [&_.rich-text_img]:rounded-xl [&_.rich-text_p:first-child]:text-xl [&_.rich-text_p:first-child]:font-semibold [&_.rich-text_p:first-child]:leading-9">
               <RichText markdown={markdown} lang={s.mainLanguage} />
             </div>
           </article>
 
           <aside className="space-y-3 lg:sticky lg:top-40">
             {s.subscriptionFromCents != null && (
-              <a href={ctx.links.subscriptions} className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/70 p-6 text-primary-foreground shadow-xl shadow-primary/25">
+              <a href={ctx.links.subscriptions} className="group relative block overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary/70 p-6 text-primary-foreground shadow-xl shadow-primary/25">
                 <div aria-hidden="true" className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-foreground/15 blur-2xl" />
                 <p className="relative text-sm font-semibold opacity-85">{tA('subsEyebrow')}</p>
                 <p className="relative mt-1 text-2xl font-black tabular-nums">{tA('from', { price: formatPrice(format, s.subscriptionFromCents) })}</p>
@@ -166,7 +166,7 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
                 </p>
               </a>
             )}
-            <a href={ctx.links.home} className="group flex items-center justify-between rounded-3xl border border-border bg-card p-5 font-bold hover:border-primary">
+            <a href={ctx.links.home} className="group flex items-center justify-between rounded-xl border border-border bg-card p-5 font-bold hover:border-primary">
               {tA('toContent')}
               <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
             </a>
@@ -187,7 +187,7 @@ function LegalPage({ ctx, title, markdown, backHref, languageNote }: TextPagePro
             <Box kind="info">{languageNote}</Box>
           </div>
         )}
-        <article className="rounded-[2rem] border border-border bg-card p-6 text-[15px] leading-7 sm:p-10">
+        <article className="rounded-xl border border-border bg-card p-6 text-[15px] leading-7 sm:p-10">
           <RichText markdown={markdown} lang={ctx.site.mainLanguage} />
         </article>
       </Page>
