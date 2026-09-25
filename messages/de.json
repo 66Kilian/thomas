@@ -403,6 +403,22 @@
     "statVideos": "{count, plural, one {Video} other {Videos}}",
     "statGalleries": "{count, plural, one {Galerie} other {Galerien}}",
     "creator": "Creator",
-    "browse": "Entdecken"
+    "browse": "Entdecken",
+    "eventsEyebrow": "Termine & Treffen",
+    "nextEvent": "Nächster Termin",
+    "details": "Details",
+    "auctionsEyebrow": "Exklusiv ersteigern",
+    "requestsEyebrow": "Nur für dich",
+    "subsEyebrow": "Mitgliedschaft",
+    "bundlesEyebrow": "Pakete",
+    "wishesEyebrow": "Unterstützen",
+    "popular": "Beliebt",
+    "raised": "gesammelt",
+    "of": "von {amount}",
+    "messages": "Nachrichten",
+    "yourOffer": "Dein Angebot",
+    "contentEyebrow": "Inhalt",
+    "allEvents": "Alle Events",
+    "allAuctions": "Alle Auktionen"
   }
 }
