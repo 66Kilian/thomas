@@ -8,7 +8,7 @@ import type { HomeProps } from '@/kit/template';
 import { ContentCard } from '../bausteine/content-card';
 import { StoryViewer, type StorySlide } from '../bausteine/story-viewer';
 import { Shell } from '../bausteine/shell';
-import { Empty } from '../bausteine/ui';
+import { Empty, keep } from '../bausteine/ui';
 
 /**
  * Aurora-Startseite: Titelbild randlos hinter der schwebenden Kopfzeile, Name groß im Bild,
@@ -214,8 +214,8 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           </section>
         )}
 
-        {/* Alle Inhalte */}
-        <section className="mt-16">
+        {/* Alle Inhalte — Sprungziel #neueste: Filter, Suche und Blättern bleiben an dieser Stelle. */}
+        <section id="neueste" className="mt-16 scroll-mt-32">
           <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <SectionTitle eyebrow={searching ? tA('browse') : tA('newestSub')} className="mb-0">
               {searching ? t('resultsFor', { q: search.value }) : tA('newest')}
@@ -225,7 +225,7 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
                 {filters.map((f) => (
                   <a
                     key={f.label}
-                    href={f.href}
+                    href={keep(f.href, 'neueste')}
                     role="tab"
                     aria-selected={f.active}
                     className={`flex h-9 flex-1 items-center justify-center whitespace-nowrap rounded-full px-4 text-sm font-semibold sm:flex-none ${f.active ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'}`}
@@ -234,7 +234,7 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
                   </a>
                 ))}
               </nav>
-              <form action={search.action} method="get" role="search" className="relative flex w-full sm:w-80">
+              <form action={keep(search.action, 'neueste')} method="get" role="search" className="relative flex w-full sm:w-80">
                 {Object.entries(search.hidden).map(([k, v]) => (
                   <input key={k} type="hidden" name={k} value={v} />
                 ))}
@@ -269,11 +269,11 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           {pagination.pages > 1 && (
             <nav className="mt-14 grid grid-cols-[1fr_auto_1fr] items-center gap-4 text-sm">
               <span className="justify-self-end">
-                <PageLink href={pagination.prevHref} label={t('prev')} dir="prev" />
+                <PageLink href={keep(pagination.prevHref, 'neueste')} label={t('prev')} dir="prev" />
               </span>
               <span className="rounded-full border border-border px-4 py-2 font-semibold tabular-nums">{t('pageOf', { page: pagination.page, pages: pagination.pages })}</span>
               <span className="justify-self-start">
-                <PageLink href={pagination.nextHref} label={t('next')} dir="next" />
+                <PageLink href={keep(pagination.nextHref, 'neueste')} label={t('next')} dir="next" />
               </span>
             </nav>
           )}

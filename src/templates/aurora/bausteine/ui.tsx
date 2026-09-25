@@ -9,6 +9,16 @@ import type { Flash } from '@/kit/types';
  */
 
 const base = 'inline-flex items-center justify-center gap-2 text-center rounded-lg font-semibold transition disabled:opacity-50';
+/**
+ * Hängt ein Sprungziel an einen gelieferten Link/Formular-Ziel, das dieselbe Seite neu lädt (Zahlungsart,
+ * Filter, Blättern): Ohne JavaScript landet der Browser danach wieder an dieser Stelle statt oben.
+ * Links mit eigenem Sprungziel bleiben unverändert.
+ */
+export function keep<T extends string | null | undefined>(href: T, anchor?: string): T {
+  if (!href || !anchor || href.includes('#')) return href;
+  return `${href}#${anchor}` as T;
+}
+
 export const btn = {
   primary: `${base} min-h-11 py-2.5 bg-primary px-6 text-sm text-primary-foreground shadow-lg shadow-primary/25 hover:opacity-90`,
   outline: `${base} min-h-11 py-2.5 bg-card px-5 text-sm ring-1 ring-border hover:ring-primary`,
@@ -51,8 +61,8 @@ export function Title({ children }: { children: ReactNode }) {
   return <h1 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl">{children}</h1>;
 }
 
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`rounded-xl border border-border bg-card p-6 text-card-foreground ${className}`}>{children}</div>;
+export function Card({ children, className = '', id }: { children: ReactNode; className?: string; id?: string }) {
+  return <div id={id} className={`rounded-xl border border-border bg-card p-6 text-card-foreground ${className}`}>{children}</div>;
 }
 
 export function Empty({ children }: { children: ReactNode }) {

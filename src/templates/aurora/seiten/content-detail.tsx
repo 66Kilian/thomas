@@ -84,12 +84,12 @@ export function ContentDetail({ ctx, content, media, paywall, confirm, related, 
               {content.description && <RichText markdown={content.description} lang={lang} />}
             </div>
 
-            <aside className="lg:sticky lg:top-40">
+            <aside id="kaufen" className="scroll-mt-32 lg:sticky lg:top-40">
               <div className="relative space-y-6 overflow-hidden rounded-xl border border-border bg-card p-6">
                 <div aria-hidden="true" className="absolute -right-14 -top-14 h-44 w-44 rounded-full bg-primary/25 blur-3xl" />
                 {paywall.purchase && (
                   <div className="relative">
-                    <PurchasePanel ctx={ctx} panel={paywall.purchase} />
+                    <PurchasePanel ctx={ctx} panel={paywall.purchase} anchor="kaufen" />
                   </div>
                 )}
                 {paywall.purchase && paywall.subscription && (

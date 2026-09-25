@@ -12,7 +12,7 @@ import { Box, btn } from './ui';
  * Kaufbereich — alle Zustände an einer Stelle. Der Kaufknopf öffnet den Bestätigungsdialog (Link).
  * Knöpfe über volle Breite, damit längere Übersetzungen umbrechen statt zu überlaufen.
  */
-export function PurchasePanel({ panel }: PurchasePanelProps) {
+export function PurchasePanel({ panel, anchor }: PurchasePanelProps & { anchor?: string }) {
   const t = useTranslations('purchase');
   const format = useFormatter();
   const preis = formatPrice(format, panel.priceCents);
@@ -55,7 +55,7 @@ export function PurchasePanel({ panel }: PurchasePanelProps) {
             </p>
           )}
           {s.wallet?.blocked && <Box kind="warning">{t('walletBlocked')}</Box>}
-          <MethodChips methods={s.methods} />
+          <MethodChips methods={s.methods} anchor={anchor} />
           <a href={s.confirmHref} className={`${s.wallet?.enough ? btn.outline : btn.primary} ${full}`}>
             {panel.buttonLabel}
           </a>

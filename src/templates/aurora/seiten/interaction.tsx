@@ -10,7 +10,7 @@ import type { EventItem } from '@/kit/types';
 import { ConfirmDialog } from '../bausteine/confirm-dialog';
 import { PurchasePanel } from '../bausteine/purchase-panel';
 import { Shell } from '../bausteine/shell';
-import { Box, btn, Card, Empty, FlashBox, input, label, Page, PageHead } from '../bausteine/ui';
+import { Box, btn, Card, Empty, FlashBox, input, keep, label, Page, PageHead } from '../bausteine/ui';
 
 // ─── Events ────────────────────────────────────────────────────────────────────────────────────
 
@@ -235,18 +235,20 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
         </div>
       </section>
 
-      {/* Stadt-Auswahl: Pillen (je ein GET-Formular des Stadtfilters) + freie Suche. Funktioniert ohne JavaScript. */}
+      {/* Stadt-Auswahl: Pillen (je ein GET-Formular des Stadtfilters) + freie Suche. Funktioniert ohne JavaScript.
+          Sprungziel #termine: nach dem Filtern bleibt die Seite an dieser Stelle. */}
+      <div id="termine" aria-hidden="true" className="scroll-mt-[5.25rem] sm:scroll-mt-[7.75rem]" />
       <div className="sticky top-[5.25rem] z-30 border-y border-border bg-background/80 backdrop-blur-xl sm:top-[7.75rem]">
         <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:thin]">
           {cityFilter.resetHref ? (
-            <a href={cityFilter.resetHref} className={`${chip} bg-card ring-1 ring-border hover:ring-primary`}>{tA('all')}</a>
+            <a href={keep(cityFilter.resetHref, 'termine')} className={`${chip} bg-card ring-1 ring-border hover:ring-primary`}>{tA('all')}</a>
           ) : (
             <span aria-current="true" className={`${chip} bg-foreground text-background`}>{tA('all')}</span>
           )}
           {cities.map((c) => {
             const on = cityFilter.value.toLowerCase() === c.toLowerCase();
             return (
-              <form key={c} action={cityFilter.action} method="get" className="shrink-0">
+              <form key={c} action={keep(cityFilter.action, 'termine')} method="get" className="shrink-0">
                 {Object.entries(cityFilter.hidden).map(([k, v]) => (
                   <input key={k} type="hidden" name={k} value={v} />
                 ))}
@@ -258,7 +260,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
               </form>
             );
           })}
-          <form action={cityFilter.action} method="get" role="search" className="relative ml-auto hidden shrink-0 sm:block">
+          <form action={keep(cityFilter.action, 'termine')} method="get" role="search" className="relative ml-auto hidden shrink-0 sm:block">
             {Object.entries(cityFilter.hidden).map(([k, v]) => (
               <input key={k} type="hidden" name={k} value={v} />
             ))}
@@ -545,9 +547,9 @@ export function AuctionDetail({ ctx, auction: a, backHref, confirm, flash }: Auc
                   </form>
                 )}
                 {s.kind === 'won' && (
-                  <div className="space-y-4">
+                  <div id="bezahlen" className="scroll-mt-32 space-y-4">
                     <Box kind="success">{t('won', { amount: formatPrice(format, a.currentBidCents) })}</Box>
-                    <PurchasePanel ctx={ctx} panel={s.purchase} />
+                    <PurchasePanel ctx={ctx} panel={s.purchase} anchor="bezahlen" />
                   </div>
                 )}
                 {s.kind === 'won_paid' && <Box kind="success">{t('wonPaid')}</Box>}
@@ -628,7 +630,7 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
             ) : (
               <div className="space-y-5">
                 {requests.map((r) => (
-                  <article key={r.id} className="space-y-4 rounded-xl border border-border bg-card p-5">
+                  <article key={r.id} id={`anfrage-${r.id}`} className="scroll-mt-32 space-y-4 rounded-xl border border-border bg-card p-5">
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm leading-6">{r.description}</p>
                       <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ${STATUS[r.status]}`}>{t(`status.${r.status}`)}</span>
@@ -679,7 +681,7 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
                     {r.purchase && (
                       <div className="space-y-3 border-t border-border pt-4">
                         <p className="text-sm font-semibold">{t('deliveredPay')}</p>
-                        <PurchasePanel ctx={ctx} panel={r.purchase} />
+                        <PurchasePanel ctx={ctx} panel={r.purchase} anchor={`anfrage-${r.id}`} />
                       </div>
                     )}
                   </article>

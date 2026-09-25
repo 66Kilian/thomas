@@ -3,11 +3,13 @@ import { useTranslations } from 'next-intl';
 
 import type { MethodOption } from '@/kit/types';
 
+import { keep } from './ui';
+
 /**
  * Zahlungsart-Auswahl als Chips (keine Aufklappliste). Jeder Chip ist ein Link — funktioniert ohne
- * JavaScript. Eine einzige Zahlungsart ⇒ nur Text. Gesperrte Chips gestrichelt mit Begründung.
+ * JavaScript. `anchor`: Sprungziel, damit die Seite nach dem Wechsel an derselben Stelle bleibt. Eine einzige Zahlungsart ⇒ nur Text. Gesperrte Chips gestrichelt mit Begründung.
  */
-export function MethodChips({ methods }: { methods: MethodOption[] }) {
+export function MethodChips({ methods, anchor }: { methods: MethodOption[]; anchor?: string }) {
   const t = useTranslations('purchase');
   if (methods.length === 0) return null;
   const gewaehlt = methods.find((m) => m.selected) ?? methods[0];
@@ -27,14 +29,14 @@ export function MethodChips({ methods }: { methods: MethodOption[] }) {
             ) : (
               <a
                 key={m.method}
-                href={m.href}
+                href={keep(m.href, anchor)}
                 aria-current={m.selected ? 'true' : undefined}
                 className={`inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-sm font-medium transition ${
                   m.selected ? 'bg-foreground text-background' : 'bg-card ring-1 ring-border hover:ring-primary'
                 }`}
               >
                 {/* Häkchen-Platz immer reserviert — beim Wechsel verschiebt sich nichts. */}
-                <Check aria-hidden="true" className={`h-3.5 w-3.5 ${m.selected ? '' : 'hidden'}`} strokeWidth={3} />
+                <Check aria-hidden="true" className={`h-3.5 w-3.5 shrink-0 ${m.selected ? '' : 'invisible'}`} strokeWidth={3} />
                 {m.label}
               </a>
             )

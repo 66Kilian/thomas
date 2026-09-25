@@ -10,7 +10,7 @@ import { ConfirmDialog } from '../bausteine/confirm-dialog';
 import { MethodChips } from '../bausteine/methods';
 import { PurchasePanel } from '../bausteine/purchase-panel';
 import { Shell } from '../bausteine/shell';
-import { Box, btn, Empty, FlashBox, input, label, Page, PageHead } from '../bausteine/ui';
+import { Box, btn, Empty, FlashBox, input, keep, label, Page, PageHead } from '../bausteine/ui';
 
 // ─── Abos ──────────────────────────────────────────────────────────────────────────────────────
 
@@ -43,14 +43,6 @@ const MARK_CARD = [
 /** Ohne Anker in dieser Stufe: Standard-Laufzeit zeigen und markieren. */
 const DEFAULT =
   '[&:not(:has([data-p]:target))_[data-p][data-default]]:block [&:not(:has([data-p]:target))_[data-c][data-default]]:border-primary [&:not(:has([data-p]:target))_[data-c][data-default]]:bg-primary/10 [&:not(:has([data-p]:target))_[data-c][data-default]_[data-dot]]:after:scale-100';
-
-/** Hängt den Anker der Laufzeit an die Links des Kaufbereichs — nach dem Neuladen bleibt sie gewählt. */
-function withAnchor(panel: SubscriptionsProps['tiers'][number]['plans'][number]['purchase'], anchor: string) {
-  const s = panel.state;
-  if (s.kind !== 'ready') return panel;
-  const a = (h: string) => (h.includes('#') ? h : `${h}#${anchor}`);
-  return { ...panel, state: { ...s, methods: s.methods.map((m) => ({ ...m, href: a(m.href) })) } };
-}
 
 export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
   const t = useTranslations('subscriptions');
@@ -183,7 +175,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
                               <BankBox bank={plan.pendingTransfer} />
                             </>
                           ) : (
-                            <PurchasePanel ctx={ctx} panel={withAnchor(plan.purchase, `plan-${plan.id}`)} />
+                            <PurchasePanel ctx={ctx} panel={plan.purchase} anchor={`plan-${plan.id}`} />
                           )}
                         </div>
                       </div>
@@ -218,7 +210,7 @@ export function Bundles({ ctx, bundles, confirm }: BundlesProps) {
             {bundles.map((b) => {
               const pics = b.items.filter((it) => it.imageUrl).slice(0, 4);
               return (
-                <article key={b.id} className="flex flex-col overflow-hidden rounded-xl border border-border bg-card">
+                <article key={b.id} id={`bundle-${b.id}`} className="flex scroll-mt-32 flex-col overflow-clip rounded-xl border border-border bg-card">
                   <div className="relative aspect-[16/9] overflow-hidden bg-muted">
                     {pics.length >= 3 ? (
                       <div className="grid h-full grid-cols-3 grid-rows-2 gap-1">
@@ -249,7 +241,7 @@ export function Bundles({ ctx, bundles, confirm }: BundlesProps) {
                       <span className="shrink-0 text-3xl font-black tabular-nums tracking-tight">{formatPrice(format, b.priceCents)}</span>
                     </div>
                     <div className="mt-auto">
-                      <PurchasePanel ctx={ctx} panel={b.purchase} />
+                      <PurchasePanel ctx={ctx} panel={b.purchase} anchor={`bundle-${b.id}`} />
                     </div>
                   </div>
                 </article>
@@ -274,8 +266,10 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
     <Shell ctx={ctx}>
       <Page width="max-w-6xl">
         <PageHead eyebrow={tA('wishesEyebrow')} title={t('title')} />
+        {/* Meldung fest unten in der Ecke: nach dem Unterstützen bleibt die Seite am Wunsch (#wunsch-…),
+            eine Meldung oben wäre dann nicht zu sehen. role="status" liest sie Screenreadern vor. */}
         {flash && (
-          <div className="mb-6">
+          <div role="status" className="fixed inset-x-4 bottom-4 z-50 rounded-xl bg-card shadow-2xl shadow-black/40 sm:left-auto sm:right-6 sm:w-[26rem]">
             <FlashBox flash={flash} />
           </div>
         )}
@@ -287,7 +281,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
               const pct = Math.round(Math.min(1, w.progress) * 100);
               const done = w.state === 'fulfilled';
               return (
-                <article key={w.id} className={`flex flex-col overflow-hidden rounded-xl border bg-card ${done ? 'border-emerald-500/60' : 'border-border'} ${w.state === 'expired' ? 'opacity-70' : ''}`}>
+                <article key={w.id} id={`wunsch-${w.id}`} className={`flex scroll-mt-32 flex-col overflow-clip rounded-xl border bg-card ${done ? 'border-emerald-500/60' : 'border-border'} ${w.state === 'expired' ? 'opacity-70' : ''}`}>
                   {w.imageUrl && (
                     <div className="relative aspect-[16/9] overflow-hidden">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -378,7 +372,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                       )}
                       {w.pendingTransfer && <BankBox bank={w.pendingTransfer} />}
                       {w.state === 'open' && w.support && (
-                        <form method="post" action={w.support.submit.action} className="space-y-4 rounded-xl border border-border bg-background/60 p-5">
+                        <form method="post" action={keep(w.support.submit.action, `wunsch-${w.id}`)} className="space-y-4 rounded-xl border border-border bg-background/60 p-5">
                           <FormFields target={w.support.submit} />
                           {w.support.fullGiftCents == null && (
                             <label className={label}>
@@ -390,7 +384,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                               <span className="mt-1.5 block text-xs font-normal text-muted-foreground">{t('min', { amount: formatPrice(format, w.support.minCents) })}</span>
                             </label>
                           )}
-                          <MethodChips methods={w.support.methods} />
+                          <MethodChips methods={w.support.methods} anchor={`wunsch-${w.id}`} />
                           <label className="block">
                             <span className="sr-only">{t('message')}</span>
                             <input name="message" placeholder={t('message')} className={input} />

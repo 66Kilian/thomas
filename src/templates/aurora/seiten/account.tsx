@@ -10,7 +10,7 @@ import { BankBox } from '../bausteine/bank-box';
 import { ConfirmDialog } from '../bausteine/confirm-dialog';
 import { MethodChips } from '../bausteine/methods';
 import { Shell } from '../bausteine/shell';
-import { Box, btn, Card, Empty, Page, PageHead, Title } from '../bausteine/ui';
+import { Box, btn, Card, Empty, keep, Page, PageHead, Title } from '../bausteine/ui';
 
 /** Muster „abgemeldet": Überschrift, Aufforderung, Anmelde-Knopf. */
 function GuestOnly({ ctx, title }: { ctx: PageContext; title: string }) {
@@ -290,27 +290,33 @@ export function Wallet({ ctx, state, balanceCents, blocked, pendingTopups, topup
             )}
             {topup && (
               <Section title={t('topupTitle')}>
-                <Card className="space-y-4">
+                <Card className="scroll-mt-32 space-y-4" id="aufladen">
                   <div className="flex flex-wrap items-center gap-2">
                     {topup.amounts.map((a) => (
-                      <a key={a.cents} href={a.href} className={`inline-flex h-11 items-center rounded-full px-5 text-sm font-bold tabular-nums ${a.selected ? 'bg-foreground text-background' : 'bg-background ring-1 ring-border hover:ring-primary'}`}>
+                      <a key={a.cents} href={keep(a.href, 'aufladen')} className={`inline-flex h-11 items-center rounded-full px-5 text-sm font-bold tabular-nums ${a.selected ? 'bg-foreground text-background' : 'bg-background ring-1 ring-border hover:ring-primary'}`}>
                         {formatPrice(format, a.cents)}
                       </a>
                     ))}
                     <span className="ml-2 flex items-center gap-2">
-                      {topup.minusHref ? <a href={topup.minusHref} className={btn.small}>−</a> : <span className={`${btn.small} opacity-40`}>−</span>}
+                      {topup.minusHref ? <a href={keep(topup.minusHref, 'aufladen')} className={btn.small}>−</a> : <span className={`${btn.small} opacity-40`}>−</span>}
                       <span className="w-24 text-center text-lg font-black tabular-nums">{formatPrice(format, topup.selectedCents)}</span>
-                      {topup.plusHref ? <a href={topup.plusHref} className={btn.small}>+</a> : <span className={`${btn.small} opacity-40`}>+</span>}
+                      {topup.plusHref ? <a href={keep(topup.plusHref, 'aufladen')} className={btn.small}>+</a> : <span className={`${btn.small} opacity-40`}>+</span>}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {t('step', { step: formatPrice(format, topup.stepCents), max: formatPrice(format, topup.maxCents) })}
                   </p>
-                  <MethodChips methods={topup.methods} />
+                  <MethodChips methods={topup.methods} anchor="aufladen" />
                   <p className="text-sm font-semibold">{t('notRefundable')}</p>
-                  <a href={topup.purchase.state.kind === 'ready' ? topup.purchase.state.confirmHref : '#'} className={`${btn.large} w-full`}>
-                    {topup.purchase.buttonLabel}
-                  </a>
+                  {topup.purchase.state.kind === 'ready' ? (
+                    <a href={topup.purchase.state.confirmHref} className={`${btn.large} w-full`}>
+                      {topup.purchase.buttonLabel}
+                    </a>
+                  ) : (
+                    <span aria-disabled="true" className={`${btn.large} w-full cursor-not-allowed opacity-50`}>
+                      {topup.purchase.buttonLabel}
+                    </span>
+                  )}
                 </Card>
               </Section>
             )}
