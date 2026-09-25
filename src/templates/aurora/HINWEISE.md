@@ -14,7 +14,17 @@ Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klasse
 - **Beispielbild in „Über mich" (Kit):** `RichText` filtert die `data:`-Bild-URL der Beispieldaten heraus
   (leeres `src`, Warnung im Dev-Server) — tritt auch im Basis-Template auf, nicht Aurora-spezifisch.
 
+- **Story: volles Bild pro Moment fehlt.** `MomentCard` hat nur `thumbUrl` (Kreisbild, 160 px). Die Story-Ansicht
+  zeigt dieses Bild groß (unscharf bei echten Fotos). Vorschlag: `mediaUrl` (Bild/Video im Hochformat) und
+  `createdAt` ergänzen.
+
 ## Vorschläge über den heutigen Umfang hinaus
+
+- **Story + Highlights** (`bausteine/story-viewer.tsx`, Client-Komponente als Verbesserung): Avatar mit drehendem
+  Ring und „Story"-Label öffnet die Story (alle Momente → neuester Inhalt → Abo-Folie); die Highlight-Kreise
+  (Momente) öffnen dieselbe Ansicht an ihrer Stelle. Tippen links/rechts, Halten = Pause, nach unten wischen =
+  schließen, Pfeiltasten/Esc, 5 s pro Folie. Gesehene Ringe werden grau („Gesehen", nur für die Sitzung,
+  sessionStorage). Ohne JavaScript bleiben es die normalen Links (`href` des Moments).
 
 - **Bundle-Vorschau:** Collage der enthaltenen Inhalte (nutzt `bundle.items`; ohne Items Farbverlauf).
 - **Weitere Inhalte** auf der Inhaltsseite (`related`, max. 4 Kacheln).
@@ -39,6 +49,11 @@ Grundflächen wie Plattform, Markenfarbe/Akzent eigen. Einzige Abweichung: **Pla
 
 Dachzeilen je Seite, „Mehr lesen/Weniger", „Im Rampenlicht", „Alle Inhalte", Kennzahl-Labels (Plural),
 „Nächster Termin", „Alle Events/Auktionen", „Beliebt", „oder", Fortschritt „von {amount}", „Dein Angebot".
+
+## Farbvariablen
+
+Verläufe/Ringe nutzen `var(--primary)` / `var(--accent)`, nicht `var(--color-primary)`: Letztere wird durch
+`@theme inline` schon auf `:root` aufgelöst und zeigt deshalb in der Seite immer den Standardwert.
 
 ## Bekannte Einschränkungen
 

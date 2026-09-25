@@ -109,7 +109,7 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
       <main id="inhalt" className="mx-auto max-w-6xl px-4 pb-8">
         {/* Profilzeile */}
         <section className={`relative flex flex-col gap-5 px-2 sm:flex-row sm:items-end sm:gap-6 sm:px-6 ${s.coverUrl ? '-mt-14' : ''}`}>
-          <div className="h-28 w-28 shrink-0 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px] shadow-2xl shadow-primary/30">
+          <div className="h-28 w-28 shrink-0 rounded-full bg-[conic-gradient(from_200deg,var(--primary),var(--accent),var(--primary))] p-[3px] shadow-2xl shadow-primary/30">
             {s.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-4 border-background object-cover" />
@@ -139,7 +139,7 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
         <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
           <article className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-7 sm:p-12">
             <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
-            <p className="relative text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{s.displayName}</p>
+            <p className="relative text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{s.displayName}</p>
             <h1 lang={s.mainLanguage} className="relative mt-3 break-words pt-1 text-4xl font-black leading-tight tracking-tight sm:text-5xl">
               {title}
             </h1>
@@ -205,7 +205,7 @@ export function Message({ ctx, kind, title }: MessagePageProps) {
         <div className="relative flex flex-col items-center py-16 text-center sm:py-24">
           <div aria-hidden="true" className="absolute top-8 h-56 w-56 rounded-full bg-primary/20 blur-3xl" />
           {kind === 'loading' ? (
-            <Loader2 aria-label={t('loading')} className="relative h-12 w-12 animate-spin text-[color:var(--brand-link,var(--color-primary))] motion-reduce:animate-none" />
+            <Loader2 aria-label={t('loading')} className="relative h-12 w-12 animate-spin text-[color:var(--brand-link,var(--primary))] motion-reduce:animate-none" />
           ) : (
             big && <p className="relative bg-gradient-to-b from-foreground to-foreground/30 bg-clip-text text-8xl font-black tracking-tighter text-transparent sm:text-9xl">{big}</p>
           )}

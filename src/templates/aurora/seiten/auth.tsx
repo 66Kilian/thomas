@@ -89,7 +89,7 @@ export function Register({ ctx, form }: AuthPageProps) {
         <p className="text-xs text-muted-foreground">{t('ageNote')}</p>
         <p className="text-xs text-muted-foreground">{t('mailNote')}</p>
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]" />
+          <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--primary)]" />
           <span>
             <a href={ctx.links.terms} className="underline">{t('termsAgree')}</a>
           </span>
@@ -222,7 +222,7 @@ export function TermsConsent({ ctx, changed, alreadyAccepted, termsMarkdown, for
               <RichText markdown={termsMarkdown} lang="de" />
             </div>
             <label className="flex items-start gap-2 text-sm">
-              <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]" /> {t('termsAccept')}
+              <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--primary)]" /> {t('termsAccept')}
             </label>
             <div className="flex flex-wrap items-center gap-4">
               <button type="submit" className={btn.primary}>

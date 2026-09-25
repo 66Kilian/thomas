@@ -445,6 +445,18 @@
     "liveTitle": "Triff {name} live.",
     "liveSub": "Partys, Drehs und Treffen – alle Termine auf einen Blick.",
     "calendar": "Kalender",
-    "map": "Karte"
+    "map": "Karte",
+    "story": "Story",
+    "storySeen": "Gesehen",
+    "storyOf": "Story von {name}",
+    "storyClose": "Schließen",
+    "storyNew": "Neu hochgeladen",
+    "storyWatch": "Jetzt ansehen",
+    "storyAboEyebrow": "Mitgliedschaft",
+    "storyAboTitle": "Voller Zugang ab {price}.",
+    "storyAboCta": "Abo wählen",
+    "storyLocked": "Nur für Mitglieder",
+    "storyLockedCta": "Mit Abo ansehen",
+    "highlights": "Highlights"
   }
 }

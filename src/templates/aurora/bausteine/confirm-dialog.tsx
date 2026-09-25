@@ -23,7 +23,7 @@ export function ConfirmDialog({ dialog }: ConfirmDialogProps) {
         <FormFields target={dialog.submit} />
         <span aria-hidden="true" className="mx-auto block h-1.5 w-12 rounded-full bg-border sm:hidden" />
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-[color:var(--brand-link,var(--color-primary))]">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-[color:var(--brand-link,var(--primary))]">
             <ShieldCheck aria-hidden="true" className="h-5 w-5" />
           </span>
           <h3 id="dialog-titel" className="text-xl font-black tracking-tight">
@@ -40,7 +40,7 @@ export function ConfirmDialog({ dialog }: ConfirmDialogProps) {
         </dl>
         {dialog.termsCheckbox && (
           <label className="flex items-start gap-3 rounded-2xl border border-border p-4 text-sm">
-            <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-primary)]" />
+            <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--primary)]" />
             <span>{dialog.termsCheckbox.label}</span>
           </label>
         )}

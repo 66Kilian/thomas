@@ -73,7 +73,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
         )}
         <div aria-hidden="true" className="absolute left-1/2 top-0 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
         <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-10 pt-12 text-center sm:pt-16">
-          <div className="h-20 w-20 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px]">
+          <div className="h-20 w-20 rounded-full bg-[conic-gradient(from_200deg,var(--primary),var(--accent),var(--primary))] p-[3px]">
             {s.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-[3px] border-background object-cover" />
@@ -86,7 +86,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
             <span>{tA('statPosts', { count: s.stats.posts })}: <b className="text-foreground tabular-nums">{s.stats.posts}</b></span>
             <span>{tA('statVideos', { count: s.stats.videos })}: <b className="text-foreground tabular-nums">{s.stats.videos}</b></span>
           </p>
-          <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{tA('subsEyebrow')}</p>
+          <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{tA('subsEyebrow')}</p>
           <h1 className="mt-2 text-5xl font-black tracking-tighter sm:text-6xl">{t('title')}</h1>
           <p className="mt-3 max-w-md text-muted-foreground">{tA('allIncluded')}</p>
         </div>
@@ -173,7 +173,7 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
                           <p lang={lang} className="mt-1 text-2xl font-black tracking-tight">
                             {tier.name} · {plan.label}
                           </p>
-                          <p className="mt-2 text-4xl font-black tabular-nums tracking-tight text-[color:var(--brand-link,var(--color-primary))]">{formatPrice(format, plan.priceCents)}</p>
+                          <p className="mt-2 text-4xl font-black tabular-nums tracking-tight text-[color:var(--brand-link,var(--primary))]">{formatPrice(format, plan.priceCents)}</p>
                           <p className="mt-2 text-sm text-muted-foreground">{plan.recurring ? t('recurring') : t('once')}</p>
                         </div>
                         <div className="space-y-4">
@@ -363,7 +363,7 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                     )}
                     {w.rewardText && (
                       <p className="flex items-start gap-2.5 rounded-2xl bg-primary/10 px-4 py-3 text-sm">
-                        <Gift aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--brand-link,var(--color-primary))]" />
+                        <Gift aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--brand-link,var(--primary))]" />
                         <span>{t('reward', { text: w.rewardText })}</span>
                       </p>
                     )}
@@ -396,11 +396,11 @@ export function Wishlist({ ctx, wishes, flash }: WishlistProps) {
                             <input name="message" placeholder={t('message')} className={input} />
                           </label>
                           <label className="flex items-center gap-2.5 text-sm">
-                            <input type="checkbox" name="anonymous" className="h-4 w-4 accent-[var(--color-primary)]" /> {t('anonymous')}
+                            <input type="checkbox" name="anonymous" className="h-4 w-4 accent-[var(--primary)]" /> {t('anonymous')}
                           </label>
                           {w.support.termsCheckbox && (
                             <label className="flex items-start gap-2.5 text-sm">
-                              <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--color-primary)]" /> {w.support.termsCheckbox.label}
+                              <input type="checkbox" name="terms" required className="mt-0.5 h-4 w-4 accent-[var(--primary)]" /> {w.support.termsCheckbox.label}
                             </label>
                           )}
                           <p className="text-xs text-muted-foreground">{w.support.legalNote}</p>

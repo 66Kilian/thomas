@@ -84,7 +84,7 @@ function EventRow({ e, lang }: { e: EventItem; lang: string }) {
           {e.admission && (
             <p lang={lang} className="pt-1">
               <span className="inline-flex max-w-full items-center gap-1.5 rounded-xl bg-background px-3 py-1.5 text-xs font-semibold ring-1 ring-border">
-                <Ticket aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[color:var(--brand-link,var(--color-primary))]" />
+                <Ticket aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[color:var(--brand-link,var(--primary))]" />
                 <span className="truncate">{e.admission}</span>
               </span>
             </p>
@@ -223,7 +223,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
         <div aria-hidden="true" className="absolute -right-24 top-0 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
         <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pb-10 pt-12 sm:pt-16 lg:grid-cols-[1fr_28rem] lg:items-end">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{tA('liveEyebrow')}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{tA('liveEyebrow')}</p>
             <h1 className="mt-3 break-words text-5xl font-black leading-[1.02] tracking-tighter sm:text-7xl">{tA('liveTitle', { name: ctx.site.displayName })}</h1>
             <p className="mt-4 max-w-lg text-lg text-muted-foreground">{tA('liveSub')}</p>
             <p className="mt-6 flex flex-wrap gap-2">
@@ -278,7 +278,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
             <div className="relative grid gap-6 lg:grid-cols-[1fr_20rem]">
               <div className="space-y-4">
                 <h2 className="flex items-center gap-2 text-xl font-black tracking-tight">
-                  <MapPin aria-hidden="true" className="h-5 w-5 text-[color:var(--brand-link,var(--color-primary))]" />
+                  <MapPin aria-hidden="true" className="h-5 w-5 text-[color:var(--brand-link,var(--primary))]" />
                   {t('near')}
                 </h2>
                 {near.cities.length > 0 && (
@@ -349,7 +349,7 @@ export function EventDetail({ ctx, event: e, backHref }: EventDetailProps) {
   const l = e.location;
   const off = e.status === 'cancelled';
   const info = 'flex gap-4 border-t border-border py-5 first:border-t-0 first:pt-0';
-  const icon = 'mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-[color:var(--brand-link,var(--color-primary))]';
+  const icon = 'mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-[color:var(--brand-link,var(--primary))]';
   const link = 'inline-flex items-center gap-1.5 text-sm font-semibold underline decoration-primary decoration-2 underline-offset-4';
   return (
     <Shell ctx={ctx}>
@@ -474,7 +474,7 @@ export function Auctions({ ctx, auctions }: AuctionsProps) {
                     <div className="mt-auto flex items-end justify-between gap-3 pt-2">
                       <div>
                         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t('currentBid')}</p>
-                        <p className="text-3xl font-black tabular-nums tracking-tight text-[color:var(--brand-link,var(--color-primary))]">{formatPrice(format, a.currentBidCents)}</p>
+                        <p className="text-3xl font-black tabular-nums tracking-tight text-[color:var(--brand-link,var(--primary))]">{formatPrice(format, a.currentBidCents)}</p>
                       </div>
                       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition group-hover:translate-x-0.5">
                         <ArrowRight aria-hidden="true" className="h-5 w-5" />
@@ -620,7 +620,7 @@ export function Requests({ ctx, intro, create, requests, confirm, flash }: Reque
 
           <section>
             <h2 className="mb-5 flex items-center gap-2 text-2xl font-black tracking-tight">
-              <MessageCircle aria-hidden="true" className="h-6 w-6 text-[color:var(--brand-link,var(--color-primary))]" />
+              <MessageCircle aria-hidden="true" className="h-6 w-6 text-[color:var(--brand-link,var(--primary))]" />
               {t('mine')}
             </h2>
             {requests.length === 0 ? (

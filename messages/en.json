@@ -445,6 +445,18 @@
     "liveTitle": "Meet {name} live.",
     "liveSub": "Parties, shoots and meet-ups – every date at a glance.",
     "calendar": "Calendar",
-    "map": "Map"
+    "map": "Map",
+    "story": "Story",
+    "storySeen": "Seen",
+    "storyOf": "Story by {name}",
+    "storyClose": "Close",
+    "storyNew": "Just uploaded",
+    "storyWatch": "Watch now",
+    "storyAboEyebrow": "Membership",
+    "storyAboTitle": "Full access from {price}.",
+    "storyAboCta": "Choose plan",
+    "storyLocked": "Members only",
+    "storyLockedCta": "Watch with subscription",
+    "highlights": "Highlights"
   }
 }

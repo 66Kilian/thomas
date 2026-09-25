@@ -35,7 +35,7 @@ export function PageHead({ back, eyebrow, title, sub, lang, children }: { back?:
           {back.label}
         </a>
       )}
-      {eyebrow && <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{eyebrow}</p>}
+      {eyebrow && <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{eyebrow}</p>}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <h1 lang={lang} className="break-words text-4xl font-black leading-[1.02] tracking-tight sm:text-5xl">
           {title}

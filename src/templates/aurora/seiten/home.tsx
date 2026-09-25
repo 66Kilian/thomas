@@ -6,6 +6,7 @@ import { formatPrice } from '@/kit/format';
 import type { HomeProps } from '@/kit/template';
 
 import { ContentCard } from '../bausteine/content-card';
+import { StoryViewer, type StorySlide } from '../bausteine/story-viewer';
 import { Shell } from '../bausteine/shell';
 import { Empty } from '../bausteine/ui';
 
@@ -31,11 +32,48 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
       {s.displayName.charAt(0)}
     </span>
   );
+  // Story: alle Momente, dann der neueste Inhalt und (falls es ein Abo gibt) die Abo-Folie.
+  const newest = items[0] ?? featured[0];
+  const slides: StorySlide[] = moments.length
+    ? [
+        ...moments.map((m) => ({
+          id: m.id,
+          image: m.thumbUrl,
+          eyebrow: m.locked ? tA('storyLocked') : t('moments'),
+          title: m.caption,
+          locked: m.locked,
+          cta: m.locked ? { label: tA('storyLockedCta'), href: ctx.links.subscriptions } : undefined
+        })),
+        ...(newest
+          ? [{ id: `neu-${newest.slug}`, image: newest.imageLargeUrl ?? newest.imageUrl, eyebrow: tA('storyNew'), title: newest.title, cta: { label: tA('storyWatch'), href: newest.href } }]
+          : []),
+        ...(s.subscriptionFromCents != null
+          ? [{ id: 'abo', image: s.coverUrl, eyebrow: tA('storyAboEyebrow'), title: tA('storyAboTitle', { price: formatPrice(format, s.subscriptionFromCents) }), cta: { label: tA('storyAboCta'), href: ctx.links.subscriptions } }]
+          : [])
+      ]
+    : [];
+  const ring = 'bg-[conic-gradient(from_200deg,var(--primary),var(--accent),var(--primary))] group-data-[seen]/ring:bg-none group-data-[seen]/ring:bg-border';
+
   const avatar = (
     <div className="h-20 w-20 shrink-0 sm:h-24 sm:w-24">
       {firstMoment ? (
-        <a href={firstMoment.href} aria-label={t('moments')} className="block h-full w-full rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px]">
-          {avatarInner}
+        <a
+          href={firstMoment.href}
+          aria-label={tA('storyOf', { name: s.displayName })}
+          data-story-open="0"
+          data-story-ring={slides.map((sl) => sl.id).join(' ')}
+          className="group/ring relative block h-full w-full rounded-full p-[3px] transition hover:scale-[1.04] motion-reduce:transform-none"
+        >
+          <span aria-hidden="true" className={`absolute inset-0 rounded-full ${ring} animate-[spin_3.2s_linear_infinite] group-data-[seen]/ring:animate-none motion-reduce:animate-none`} />
+          <span className="relative block h-full w-full">{avatarInner}</span>
+          <span
+            data-story-hint
+            data-label={tA('story')}
+            data-seen-label={tA('storySeen')}
+            className="absolute -bottom-2 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full border-2 border-background bg-primary px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary-foreground group-data-[seen]/ring:bg-card group-data-[seen]/ring:text-muted-foreground"
+          >
+            {tA('story')}
+          </span>
         </a>
       ) : (
         avatarInner
@@ -134,13 +172,14 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           </section>
         )}
 
-        {/* Momente — waagrecht scrollbar mit sichtbarer Leiste. */}
+        {/* Highlights (Momente) — öffnen die Story an dieser Stelle; waagrecht scrollbar mit sichtbarer Leiste. */}
         {moments.length > 0 && (
           <section aria-label={t('moments')} className="mt-10">
-            <div className="flex gap-5 overflow-x-auto pb-3 [scrollbar-width:thin]">
-              {moments.map((m) => (
-                <a key={m.id} href={m.href} className="group flex w-20 shrink-0 flex-col items-center gap-2 text-center">
-                  <span className={`relative rounded-full p-[3px] transition group-hover:scale-105 motion-reduce:transform-none ${m.locked ? 'bg-border' : 'bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))]'}`}>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{tA('highlights')}</p>
+            <div className="-mx-4 flex gap-5 overflow-x-auto px-4 pb-3 [scrollbar-width:thin]">
+              {moments.map((m, i) => (
+                <a key={m.id} href={m.href} data-story-open={i} data-story-ring={m.id} className="group/ring flex w-20 shrink-0 flex-col items-center gap-2 text-center">
+                  <span className={`relative rounded-full p-[3px] transition group-hover/ring:scale-105 motion-reduce:transform-none ${ring}`}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={m.thumbUrl} alt="" className="h-[4.25rem] w-[4.25rem] rounded-full border-[3px] border-background object-cover" />
                     {m.locked && (
@@ -239,6 +278,14 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           )}
         </section>
       </main>
+      {slides.length > 0 && (
+        <StoryViewer
+          slides={slides}
+          name={s.displayName}
+          avatarUrl={s.logoUrl}
+          labels={{ title: tA('storyOf', { name: s.displayName }), close: tA('storyClose'), prev: t('prev'), next: t('next') }}
+        />
+      )}
     </Shell>
   );
 }
@@ -262,7 +309,7 @@ function PageLink({ href, label, dir }: { href: string | null; label: string; di
 function SectionTitle({ children, eyebrow, className = 'mb-6' }: { children: ReactNode; eyebrow?: string; className?: string }) {
   return (
     <div className={className}>
-      {eyebrow && <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{eyebrow}</p>}
+      {eyebrow && <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--primary))]">{eyebrow}</p>}
       <h2 className="text-3xl font-black tracking-tight sm:text-4xl">{children}</h2>
     </div>
   );
