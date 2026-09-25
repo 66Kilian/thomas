@@ -398,6 +398,11 @@
     "readMore": "Read more",
     "readLess": "Show less",
     "spotlight": "In the spotlight",
-    "allContent": "All content"
+    "allContent": "All content",
+    "statPosts": "{count, plural, one {post} other {posts}}",
+    "statVideos": "{count, plural, one {video} other {videos}}",
+    "statGalleries": "{count, plural, one {gallery} other {galleries}}",
+    "creator": "Creator",
+    "browse": "Discover"
   }
 }

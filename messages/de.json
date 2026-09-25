@@ -398,6 +398,11 @@
     "readMore": "Mehr lesen",
     "readLess": "Weniger anzeigen",
     "spotlight": "Im Rampenlicht",
-    "allContent": "Alle Inhalte"
+    "allContent": "Alle Inhalte",
+    "statPosts": "{count, plural, one {Beitrag} other {Beiträge}}",
+    "statVideos": "{count, plural, one {Video} other {Videos}}",
+    "statGalleries": "{count, plural, one {Galerie} other {Galerien}}",
+    "creator": "Creator",
+    "browse": "Entdecken"
   }
 }
