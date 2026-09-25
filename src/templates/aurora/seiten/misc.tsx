@@ -1,5 +1,7 @@
 import { ArrowRight, Loader2, ShieldAlert } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useFormatter, useTranslations } from 'next-intl';
+
+import { formatPrice } from '@/kit/format';
 
 import { FormFields } from '@/kit/platform/form-fields';
 import { RichText } from '@/kit/platform/rich-text';
@@ -67,8 +69,102 @@ export function AgeGate({ ctx, confirm, leaveHref }: AgeGateProps) {
   );
 }
 
-/** Textseiten (Impressum, AGB …): ruhige Lesespalte mit großzügigem Zeilenabstand. */
-export function TextPage({ ctx, title, markdown, backHref, languageNote }: TextPageProps) {
+/**
+ * Textseiten. Eigene Seiten des Models (aktiver Menüpunkt „page:…", z. B. „Über mich") bekommen einen
+ * Profilkopf mit Titelbild, Porträt, Kennzahlen und Abo-/Start-Knöpfen. Rechtstexte (nicht im Menü)
+ * bleiben eine ruhige Lesespalte.
+ */
+export function TextPage(props: TextPageProps) {
+  const eigene = props.ctx.menu.some((m) => m.active && m.key.startsWith('page:'));
+  return eigene ? <ModelPage {...props} /> : <LegalPage {...props} />;
+}
+
+function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
+  const tA = useTranslations('tpl_aurora');
+  const th = useTranslations('home');
+  const format = useFormatter();
+  const s = ctx.site;
+  const stats = [
+    { n: s.stats.posts, l: tA('statPosts', { count: s.stats.posts }) },
+    { n: s.stats.videos, l: tA('statVideos', { count: s.stats.videos }) },
+    { n: s.stats.galleries, l: tA('statGalleries', { count: s.stats.galleries }) }
+  ];
+  return (
+    <Shell ctx={ctx}>
+      <section className={`relative ${s.coverUrl ? '-mt-[4.75rem] sm:-mt-[7.5rem]' : ''}`}>
+        {s.coverUrl ? (
+          <div className="absolute inset-0 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={s.coverUrl} alt="" className="h-full w-full object-cover" />
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-black/30" />
+          </div>
+        ) : (
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+            <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
+            <div className="absolute -right-16 top-10 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
+          </div>
+        )}
+        <div className={`relative mx-auto max-w-6xl px-4 ${s.coverUrl ? 'pb-10 pt-36 sm:pt-52' : 'pb-8 pt-12 sm:pt-16'}`}>
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{s.displayName}</p>
+          <h1 lang={s.mainLanguage} className="max-w-4xl break-words text-5xl font-black leading-[0.95] tracking-tighter sm:text-7xl">
+            {title}
+          </h1>
+        </div>
+      </section>
+
+      <main id="inhalt" className="mx-auto max-w-6xl px-4 pb-8">
+        {languageNote && (
+          <div className="mb-8 max-w-3xl">
+            <Box kind="info">{languageNote}</Box>
+          </div>
+        )}
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+          <article className="rounded-[2rem] border border-border bg-card p-6 text-[17px] leading-8 sm:p-10 [&_.rich-text_img]:rounded-3xl [&_.rich-text_p:first-child]:text-xl [&_.rich-text_p:first-child]:font-semibold [&_.rich-text_p:first-child]:leading-9">
+            <RichText markdown={markdown} lang={s.mainLanguage} />
+          </article>
+
+          <aside className="space-y-4 lg:sticky lg:top-40">
+            <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-6 text-center">
+              <div aria-hidden="true" className="pointer-events-none absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
+              <div className="relative mx-auto h-24 w-24 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px]">
+                {s.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-[3px] border-card object-cover" />
+                ) : (
+                  <span aria-hidden="true" className="flex h-full w-full items-center justify-center rounded-full border-[3px] border-card bg-primary text-3xl font-black text-primary-foreground">
+                    {s.displayName.charAt(0)}
+                  </span>
+                )}
+              </div>
+              <p className="relative mt-3 text-lg font-black tracking-tight">{s.displayName}</p>
+              <dl className="relative mt-4 grid grid-cols-3 gap-2">
+                {stats.map((st) => (
+                  <div key={st.l} className="flex flex-col-reverse rounded-2xl bg-background/70 px-2 py-3">
+                    <dt className="truncate text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{st.l}</dt>
+                    <dd className="text-xl font-black tabular-nums">{st.n}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="relative mt-5 space-y-2">
+                {s.subscriptionFromCents != null && (
+                  <a href={ctx.links.subscriptions} className={`${btn.primary} w-full whitespace-normal text-center`}>
+                    {th('subscribeFrom', { price: formatPrice(format, s.subscriptionFromCents) })}
+                  </a>
+                )}
+                <a href={ctx.links.home} className={`${btn.outline} w-full`}>
+                  {tA('toContent')}
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </Shell>
+  );
+}
+
+function LegalPage({ ctx, title, markdown, backHref, languageNote }: TextPageProps) {
   return (
     <Shell ctx={ctx}>
       <Page width="max-w-3xl">

@@ -11,7 +11,7 @@ import { Empty } from '../bausteine/ui';
 
 /**
  * Aurora-Startseite: Titelbild randlos hinter der schwebenden Kopfzeile, Name groß im Bild,
- * Kennzahlen als große Zahlen, Momente-Ring, Bento-Raster „Im Rampenlicht", Filter-Pillen, Raster.
+ * Kennzahlen als große Zahlen, Momente-Ring, Reihe „Empfohlen" (Highlights), Raster „Neueste" mit Filter-Pillen.
  * Fehlende Bausteine (Titelbild, Logo, Abo, Momente, Hervorgehobenes) schließen ohne Lücke.
  */
 export function Home({ ctx, featured, items, filters, search, searching, pagination, moments, tiers }: HomeProps) {
@@ -22,8 +22,6 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
   const langIntro = s.profileIntro.length > 240;
   const firstMoment = moments[0];
   const hasCover = Boolean(s.coverUrl);
-  /** Bis zu drei hervorgehobene Inhalte: bei drei als Bento (einer groß, zwei daneben). */
-  const spot = featured.slice(0, 3);
 
   const avatarInner = s.logoUrl ? (
     // eslint-disable-next-line @next/next/no-img-element
@@ -162,14 +160,14 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
           </section>
         )}
 
-        {/* Im Rampenlicht — Bento: erster Inhalt groß, die weiteren daneben. */}
+        {/* Empfohlen — die Highlights des Models in einer waagrechten Reihe (sichtbare Scrollleiste). */}
         {featured.length > 0 && !searching && (
           <section className="mt-16">
-            <SectionTitle eyebrow={t('featured')}>{tA('spotlight')}</SectionTitle>
-            <div className={`grid grid-cols-2 gap-4 sm:gap-5 ${spot.length === 3 ? 'sm:grid-cols-3' : spot.length === 2 ? 'sm:grid-cols-2 lg:max-w-4xl' : 'sm:max-w-sm'}`}>
-              {spot.map((card, i) => (
-                <div key={card.slug} className={spot.length === 3 && i === 0 ? 'col-span-2 sm:row-span-2' : spot.length === 1 ? 'col-span-2' : ''}>
-                  <ContentCard ctx={ctx} card={card} size={spot.length === 3 && i === 0 ? 'large' : 'small'} />
+            <SectionTitle eyebrow={tA('recommendedSub', { name: s.displayName })}>{tA('recommended')}</SectionTitle>
+            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:thin] sm:gap-5">
+              {featured.map((card) => (
+                <div key={card.slug} className="w-[62%] shrink-0 snap-start sm:w-[15.5rem] lg:w-[16.5rem]">
+                  <ContentCard ctx={ctx} card={card} size="large" />
                 </div>
               ))}
             </div>
@@ -179,8 +177,8 @@ export function Home({ ctx, featured, items, filters, search, searching, paginat
         {/* Alle Inhalte */}
         <section className="mt-16">
           <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <SectionTitle eyebrow={tA('browse')} className="mb-0">
-              {searching ? t('resultsFor', { q: search.value }) : tA('allContent')}
+            <SectionTitle eyebrow={searching ? tA('browse') : tA('newestSub')} className="mb-0">
+              {searching ? t('resultsFor', { q: search.value }) : tA('newest')}
             </SectionTitle>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <nav role="tablist" className="inline-flex w-full rounded-full border border-border bg-card/70 p-1 backdrop-blur sm:w-auto">

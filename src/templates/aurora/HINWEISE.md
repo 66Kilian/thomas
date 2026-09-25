@@ -11,11 +11,19 @@ Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klasse
   `{ month: 'long', year: 'numeric' }`, `{ hour, minute }`). Vorschlag: benannte Formate
   `day`, `weekdayShort`, `monthShort`, `monthYear`, `time` ergänzen.
 
+- **Beispielbild in „Über mich" (Kit):** `RichText` filtert die `data:`-Bild-URL der Beispieldaten heraus
+  (leeres `src`, Warnung im Dev-Server) — tritt auch im Basis-Template auf, nicht Aurora-spezifisch.
+
 ## Vorschläge über den heutigen Umfang hinaus
 
 - **Bundle-Vorschau:** Collage der enthaltenen Inhalte (nutzt `bundle.items`; ohne Items Farbverlauf).
 - **Weitere Inhalte** auf der Inhaltsseite (`related`, max. 4 Kacheln).
 - **Nächster Termin** groß über der Event-Liste; Liste nach Monaten gruppiert.
+- **Startseite:** Reihe „Empfohlen" (hervorgehobene Inhalte, waagrecht scrollbar), darunter Raster „Neueste".
+- **Eigene Seiten des Models** (aktiver Menüpunkt `page:…`, z. B. „Über mich") mit Profilkopf, Kennzahlen und Abo-Knopf;
+  Rechtstexte bleiben eine schlichte Lesespalte.
+- **Abos kompakt:** Laufzeiten als aufklappbare Zeilen (`<details>`, ohne JavaScript); Zustände außer „bereit"
+  (abgemeldet, Überweisung offen, Fehler …) sind automatisch aufgeklappt.
 - **Auktionen mit Bild** (nutzt `imageUrl`, sonst Farbverlauf mit Symbol).
 - **Hervorhebung „Beliebt"** auf der teuersten Abo-Stufe (nur bei mehreren Stufen).
 - Fehlerseite „404" als große Zahl.
@@ -35,3 +43,8 @@ Dachzeilen je Seite, „Mehr lesen/Weniger", „Im Rampenlicht", „Alle Inhalte
 - Konto-Seiten (Profil, Zahlungen, Guthaben, Benachrichtigungen, Anmelden …) übernehmen den Aufbau
   des Basis-Templates, aber alle Grundbausteine (Knöpfe, Felder, Karten, Kästen) im Aurora-Stil.
 - Ohne Webschrift (Systemschrift, fette Gewichte); eine eigene Schrift wäre möglich (Mehraufwand).
+
+## Nur zur Präsentation (nicht Teil der Abgabe)
+
+- `src/app/aurora/page.tsx` — Übersichtsseite unter `/aurora` mit allen Seiten, Bausteinen und Farbwelten
+  als Links. Kann beim Einsetzen in die Plattform gelöscht werden.

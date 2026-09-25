@@ -419,6 +419,17 @@
     "yourOffer": "Dein Angebot",
     "contentEyebrow": "Inhalt",
     "allEvents": "Alle Events",
-    "allAuctions": "Alle Auktionen"
+    "allAuctions": "Alle Auktionen",
+    "recommended": "Empfohlen",
+    "recommendedSub": "Die Highlights, ausgewählt von {name}",
+    "newest": "Neueste",
+    "newestSub": "Frisch hochgeladen",
+    "from": "ab {price}",
+    "book": "Buchen",
+    "aboutEyebrow": "Über mich",
+    "subscribeCta": "Abonnieren",
+    "requestCta": "Wunsch anfragen",
+    "toContent": "Zu den Inhalten",
+    "extendShort": "Verlängern"
   }
 }

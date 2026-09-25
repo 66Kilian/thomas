@@ -1,4 +1,4 @@
-import { CalendarClock, Check, ExternalLink, Gift, Layers, Lock, Repeat, Sparkles, Users } from 'lucide-react';
+import { CalendarClock, Check, ChevronDown, ExternalLink, Gift, Layers, Lock, Repeat, Sparkles, Users } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import { formatPrice } from '@/kit/format';
@@ -32,79 +32,81 @@ export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
         {tiers.length === 0 ? (
           <Empty>{t('empty')}</Empty>
         ) : (
-          <div className={`grid gap-6 ${tiers.length === 1 ? 'max-w-xl' : tiers.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
+          <div className={`grid items-start gap-5 ${tiers.length === 1 ? 'max-w-md' : tiers.length === 2 ? 'md:grid-cols-2 lg:max-w-4xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
             {tiers.map((tier) => {
               const featured = tier === top;
               return (
                 <article
                   key={tier.id}
-                  className={`relative flex flex-col overflow-hidden rounded-[2rem] p-6 sm:p-8 ${
-                    featured ? 'bg-gradient-to-b from-primary/25 via-card to-card ring-2 ring-primary shadow-2xl shadow-primary/20' : 'border border-border bg-card'
+                  className={`relative flex flex-col overflow-hidden rounded-[1.75rem] p-5 sm:p-6 ${
+                    featured ? 'bg-gradient-to-b from-primary/20 via-card to-card ring-2 ring-primary shadow-2xl shadow-primary/20' : 'border border-border bg-card'
                   }`}
                 >
-                  {featured && <div aria-hidden="true" className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-accent/25 blur-3xl" />}
+                  {featured && <div aria-hidden="true" className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-accent/25 blur-3xl" />}
                   <div className="relative flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <h2 lang={lang} className="break-words text-2xl font-black tracking-tight">
-                        {tier.name}
-                      </h2>
-                      {tier.plans.length > 0 && (
-                        <p className="mt-3 flex items-baseline gap-1.5">
-                          <span className="text-4xl font-black tabular-nums tracking-tight">{formatPrice(format, minPrice(tier.plans))}</span>
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                      {tier.active && (
-                        <span className="inline-flex h-7 items-center gap-1 rounded-full bg-emerald-600 px-3 text-xs font-bold text-white">
-                          <Check aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={3} />
-                          {t('active')}
-                        </span>
-                      )}
-                      {featured && !tier.active && (
-                        <span className="inline-flex h-7 items-center gap-1 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground">
-                          <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+                    <h2 lang={lang} className="min-w-0 break-words text-xl font-black tracking-tight">
+                      {tier.name}
+                    </h2>
+                    {tier.active ? (
+                      <span className="inline-flex h-6 shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-2.5 text-[11px] font-bold text-white">
+                        <Check aria-hidden="true" className="h-3 w-3" strokeWidth={3} />
+                        {t('active')}
+                      </span>
+                    ) : (
+                      featured && (
+                        <span className="inline-flex h-6 shrink-0 items-center gap-1 rounded-full bg-primary px-2.5 text-[11px] font-bold text-primary-foreground">
+                          <Sparkles aria-hidden="true" className="h-3 w-3" />
                           {tA('popular')}
                         </span>
-                      )}
-                    </div>
+                      )
+                    )}
                   </div>
+                  {tier.plans.length > 0 && (
+                    <p className="relative mt-2 text-3xl font-black tabular-nums tracking-tight">{tA('from', { price: formatPrice(format, minPrice(tier.plans)) })}</p>
+                  )}
                   {tier.description && (
-                    <p lang={lang} className="relative mt-4 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+                    <p lang={lang} className="relative mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
                       {tier.description}
                     </p>
                   )}
                   {tier.active && tier.activeUntil && (
-                    <div className="relative mt-5">
-                      <Box kind="success">
-                        {t('activeUntil', { date: format.dateTime(new Date(tier.activeUntil), 'dateLong') })} {t('extend')}
-                      </Box>
+                    <div className="relative mt-4">
+                      <Box kind="success">{t('activeUntil', { date: format.dateTime(new Date(tier.activeUntil), 'dateLong') })}</Box>
                     </div>
                   )}
-                  <div className="relative mt-6 flex-1 space-y-4">
+                  <div className="relative mt-4 space-y-2">
                     {tier.plans.length === 0 && <p className="text-sm text-muted-foreground">{t('noPlans')}</p>}
-                    {tier.plans.map((plan) => (
-                      <div key={plan.id} className="space-y-4 rounded-3xl border border-border bg-background/70 p-5">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <p lang={lang} className="text-lg font-bold">{plan.label}</p>
-                            <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                              {plan.recurring ? <Repeat aria-hidden="true" className="h-3.5 w-3.5" /> : <CalendarClock aria-hidden="true" className="h-3.5 w-3.5" />}
-                              {plan.recurring ? t('recurring') : t('once')}
-                            </p>
+                    {tier.plans.map((plan) => {
+                      const direkt = plan.purchase.state.kind !== 'ready' || plan.purchase.error != null || plan.pendingTransfer != null;
+                      return (
+                        <details key={plan.id} open={direkt} className="group rounded-2xl border border-border bg-background/70 open:border-primary/60">
+                          <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                            <span className="min-w-0 flex-1">
+                              <span lang={lang} className="block truncate font-bold">{plan.label}</span>
+                              <span className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
+                                {plan.recurring ? <Repeat aria-hidden="true" className="h-3 w-3" /> : <CalendarClock aria-hidden="true" className="h-3 w-3" />}
+                                {plan.recurring ? t('recurring') : t('once')}
+                              </span>
+                            </span>
+                            <span className="shrink-0 text-lg font-black tabular-nums">{formatPrice(format, plan.priceCents)}</span>
+                            <span className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground group-open:bg-foreground group-open:text-background">
+                              {tier.active ? tA('extendShort') : tA('book')}
+                              <ChevronDown aria-hidden="true" className="h-3.5 w-3.5 transition group-open:rotate-180" />
+                            </span>
+                          </summary>
+                          <div className="space-y-3 border-t border-border px-4 pb-4 pt-4">
+                            {plan.pendingTransfer ? (
+                              <>
+                                <Box kind="warning">{t('openTransfer')}</Box>
+                                <BankBox bank={plan.pendingTransfer} />
+                              </>
+                            ) : (
+                              <PurchasePanel ctx={ctx} panel={plan.purchase} />
+                            )}
                           </div>
-                          <span className="shrink-0 text-2xl font-black tabular-nums tracking-tight">{formatPrice(format, plan.priceCents)}</span>
-                        </div>
-                        {plan.pendingTransfer ? (
-                          <>
-                            <Box kind="warning">{t('openTransfer')}</Box>
-                            <BankBox bank={plan.pendingTransfer} />
-                          </>
-                        ) : (
-                          <PurchasePanel ctx={ctx} panel={plan.purchase} />
-                        )}
-                      </div>
-                    ))}
+                        </details>
+                      );
+                    })}
                   </div>
                 </article>
               );
