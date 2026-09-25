@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/*
+ * Design-Tokens. Die Werte setzt die gewählte Farbwelt (src/kit/theme.ts → themeStyle) als
+ * CSS-Variablen; hier stehen nur neutrale Rückfallwerte. Komponenten verwenden ausschließlich die
+ * Tailwind-Klassen dieser Tokens: bg-background, text-foreground, bg-card, text-muted-foreground,
+ * border-border, bg-primary, text-primary-foreground, bg-accent, rounded-sm … rounded-xl.
+ */
+:root {
+  --radius: 0.625rem;
+  --background: #ffffff;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #111111;
+  --destructive: #dc2626;
+  --border: #e4e4e7;
+  --primary: #18181b;
+  --primary-foreground: #ffffff;
+  --ring: #18181b;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+    outline-color: var(--color-ring);
+  }
+}
+
+/* Farbwelt-Dekor wie auf der Plattform: 3-px-Akzentlinie oben + dezenter Lichtschein. */
+.kit-theme[data-color-theme]::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--theme-accent-bar);
+  z-index: 60;
+  pointer-events: none;
+}
+.kit-theme[data-color-theme] {
+  background-image: var(--theme-page-glow, none);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Formatierter Text des Models (RichText). Ein Template darf das überschreiben. */
+.rich-text { line-height: 1.65; }
+.rich-text > :first-child { margin-top: 0; }
+.rich-text > :last-child { margin-bottom: 0; }
+.rich-text p { margin: 0.75em 0; }
+.rich-text h1, .rich-text h2, .rich-text h3 { font-weight: 600; line-height: 1.25; margin: 1.2em 0 0.5em; }
+.rich-text h1 { font-size: 1.5rem; }
+.rich-text h2 { font-size: 1.25rem; }
+.rich-text h3 { font-size: 1.1rem; }
+.rich-text ul, .rich-text ol { margin: 0.75em 0; padding-left: 1.5rem; }
+.rich-text ul { list-style: disc; }
+.rich-text ol { list-style: decimal; }
+.rich-text a { color: var(--brand-link, var(--primary)); text-decoration: underline; }
+.rich-text strong { font-weight: 600; }
+.rich-text img { max-width: 100%; border-radius: var(--radius); margin: 0.75em 0; }
+.rich-text blockquote { border-left: 3px solid var(--color-border); padding-left: 0.75rem; color: var(--color-muted-foreground); }
+.rich-text table { border-collapse: collapse; margin: 0.75em 0; }
+.rich-text th, .rich-text td { border: 1px solid var(--color-border); padding: 0.35rem 0.6rem; }
