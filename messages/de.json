@@ -392,5 +392,12 @@
     },
     "languageNote": "Dieser Text liegt nur auf Deutsch vor.",
     "demoAction": "Demo: Die Aktion „{name}“ wurde ausgelöst. Auf der Plattform passiert hier das Echte."
+  },
+  "tpl_aurora": {
+    "or": "oder",
+    "readMore": "Mehr lesen",
+    "readLess": "Weniger anzeigen",
+    "spotlight": "Im Rampenlicht",
+    "allContent": "Alle Inhalte"
   }
 }

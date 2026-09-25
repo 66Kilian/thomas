@@ -392,5 +392,12 @@
     },
     "languageNote": "This text is only available in German.",
     "demoAction": "Demo: the action “{name}” was triggered. On the platform, the real thing happens here."
+  },
+  "tpl_aurora": {
+    "or": "or",
+    "readMore": "Read more",
+    "readLess": "Show less",
+    "spotlight": "In the spotlight",
+    "allContent": "All content"
   }
 }
