@@ -22,8 +22,10 @@ Bento „Im Rampenlicht", Pillen-Bedienelemente, große Radien. Nur Token-Klasse
 - **Startseite:** Reihe „Empfohlen" (hervorgehobene Inhalte, waagrecht scrollbar), darunter Raster „Neueste".
 - **Eigene Seiten des Models** (aktiver Menüpunkt `page:…`, z. B. „Über mich") mit Profilkopf, Kennzahlen und Abo-Knopf;
   Rechtstexte bleiben eine schlichte Lesespalte.
-- **Abos kompakt:** Laufzeiten als aufklappbare Zeilen (`<details>`, ohne JavaScript); Zustände außer „bereit"
-  (abgemeldet, Überweisung offen, Fehler …) sind automatisch aufgeklappt.
+- **Abos mit Laufzeit-Karten:** Laufzeiten als wählbare Karten; der Kaufbereich der gewählten Laufzeit erscheint
+  darunter. Auswahl ohne JavaScript über Anker (`#plan-<id>`, `:target` + `:has()`); die Zahlungsart-Links hängen
+  den Anker an, damit die Auswahl beim Wechsel erhalten bleibt. Ohne Anker ist je Stufe die erste Laufzeit
+  gewählt, deren Kaufbereich nicht „bereit" ist (Fehler, Überweisung offen …), sonst die erste.
 - **Auktionen mit Bild** (nutzt `imageUrl`, sonst Farbverlauf mit Symbol).
 - **Hervorhebung „Beliebt"** auf der teuersten Abo-Stufe (nur bei mehreren Stufen).
 - Fehlerseite „404" als große Zahl.
@@ -46,5 +48,10 @@ Dachzeilen je Seite, „Mehr lesen/Weniger", „Im Rampenlicht", „Alle Inhalte
 
 ## Nur zur Präsentation (nicht Teil der Abgabe)
 
-- `src/app/aurora/page.tsx` — Übersichtsseite unter `/aurora` mit allen Seiten, Bausteinen und Farbwelten
-  als Links. Kann beim Einsetzen in die Plattform gelöscht werden.
+- `src/app/page.tsx` — Präsentationsseite des Pakets unter `/` (Stile, Rundgang durch alle Seiten mit
+  Live-Vorschau, alle Zustände als Links).
+- `src/app/uebersicht/page.tsx` — die bisherige Kit-Übersicht, verschoben von `/` nach `/uebersicht`.
+- `src/templates/registry.ts` — listet nur `aurora`; das Basis-Template bleibt im Code (Ersatz für fehlende
+  Seiten in der Vorschau), wird aber nicht mehr angeboten.
+
+Alle drei können beim Einsetzen in die Plattform auf den Stand des Kits zurückgesetzt werden.

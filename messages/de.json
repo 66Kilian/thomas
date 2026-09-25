@@ -430,6 +430,21 @@
     "subscribeCta": "Abonnieren",
     "requestCta": "Wunsch anfragen",
     "toContent": "Zu den Inhalten",
-    "extendShort": "Verlängern"
+    "extendShort": "Verlängern",
+    "choosePlan": "Wähle deine Laufzeit",
+    "continueWith": "Weiter mit {plan}",
+    "allIncluded": "Jede Laufzeit schaltet alle Inhalte dieser Stufe frei.",
+    "selected": "Ausgewählt",
+    "choose": "Auswählen",
+    "watch": "Ansehen",
+    "unlock": "Freischalten",
+    "dates": "{count, plural, one {# Termin} other {# Termine}}",
+    "cities": "{count, plural, one {# Stadt} other {# Städte}}",
+    "all": "Alle",
+    "liveEyebrow": "Live erleben",
+    "liveTitle": "Triff {name} live.",
+    "liveSub": "Partys, Drehs und Treffen – alle Termine auf einen Blick.",
+    "calendar": "Kalender",
+    "map": "Karte"
   }
 }

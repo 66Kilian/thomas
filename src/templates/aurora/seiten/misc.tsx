@@ -91,72 +91,85 @@ function ModelPage({ ctx, title, markdown, languageNote }: TextPageProps) {
   ];
   return (
     <Shell ctx={ctx}>
-      <section className={`relative ${s.coverUrl ? '-mt-[4.75rem] sm:-mt-[7.5rem]' : ''}`}>
-        {s.coverUrl ? (
-          <div className="absolute inset-0 overflow-hidden">
+      {/* Titelbild als Band — Schrift steht darunter, nie im Bild. */}
+      {s.coverUrl ? (
+        <div className="relative mx-auto mt-4 max-w-6xl px-4">
+          <div className="relative h-48 overflow-hidden rounded-[2rem] sm:h-72">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={s.coverUrl} alt="" className="h-full w-full object-cover" />
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-black/30" />
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           </div>
-        ) : (
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
-            <div className="absolute -right-16 top-10 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
-          </div>
-        )}
-        <div className={`relative mx-auto max-w-6xl px-4 ${s.coverUrl ? 'pb-10 pt-36 sm:pt-52' : 'pb-8 pt-12 sm:pt-16'}`}>
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{s.displayName}</p>
-          <h1 lang={s.mainLanguage} className="max-w-4xl break-words text-5xl font-black leading-[0.95] tracking-tighter sm:text-7xl">
-            {title}
-          </h1>
         </div>
-      </section>
+      ) : (
+        <div aria-hidden="true" className="relative mx-auto mt-4 h-24 max-w-6xl overflow-hidden px-4">
+          <div className="absolute -left-10 -top-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+        </div>
+      )}
 
       <main id="inhalt" className="mx-auto max-w-6xl px-4 pb-8">
-        {languageNote && (
-          <div className="mb-8 max-w-3xl">
-            <Box kind="info">{languageNote}</Box>
+        {/* Profilzeile */}
+        <section className={`relative flex flex-col gap-5 px-2 sm:flex-row sm:items-end sm:gap-6 sm:px-6 ${s.coverUrl ? '-mt-14' : ''}`}>
+          <div className="h-28 w-28 shrink-0 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px] shadow-2xl shadow-primary/30">
+            {s.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-4 border-background object-cover" />
+            ) : (
+              <span aria-hidden="true" className="flex h-full w-full items-center justify-center rounded-full border-4 border-background bg-primary text-4xl font-black text-primary-foreground">{s.displayName.charAt(0)}</span>
+            )}
           </div>
-        )}
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-          <article className="rounded-[2rem] border border-border bg-card p-6 text-[17px] leading-8 sm:p-10 [&_.rich-text_img]:rounded-3xl [&_.rich-text_p:first-child]:text-xl [&_.rich-text_p:first-child]:font-semibold [&_.rich-text_p:first-child]:leading-9">
-            <RichText markdown={markdown} lang={s.mainLanguage} />
+          <div className="min-w-0 flex-1 pb-1">
+            <p className="break-words text-3xl font-black tracking-tight sm:text-4xl">{s.displayName}</p>
+            <dl className="mt-2 flex flex-wrap gap-x-6 gap-y-1">
+              {stats.map((st) => (
+                <div key={st.l} className="flex items-baseline gap-1.5">
+                  <dd className="font-black tabular-nums">{st.n}</dd>
+                  <dt className="text-sm text-muted-foreground">{st.l}</dt>
+                </div>
+              ))}
+            </dl>
+          </div>
+          {s.subscriptionFromCents != null && (
+            <a href={ctx.links.subscriptions} className={`${btn.primary} h-12 px-7`}>
+              {th('subscribeFrom', { price: formatPrice(format, s.subscriptionFromCents) })}
+            </a>
+          )}
+        </section>
+
+        {/* Inhalt */}
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+          <article className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-7 sm:p-12">
+            <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
+            <p className="relative text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{s.displayName}</p>
+            <h1 lang={s.mainLanguage} className="relative mt-3 break-words pt-1 text-4xl font-black leading-tight tracking-tight sm:text-5xl">
+              {title}
+            </h1>
+            <span aria-hidden="true" className="relative mt-6 block h-1 w-16 rounded-full bg-gradient-to-r from-primary to-accent" />
+            {languageNote && (
+              <div className="relative mt-6">
+                <Box kind="info">{languageNote}</Box>
+              </div>
+            )}
+            <div className="relative mt-8 max-w-2xl text-[17px] leading-8 [&_.rich-text_img]:my-8 [&_.rich-text_img]:rounded-3xl [&_.rich-text_p:first-child]:text-xl [&_.rich-text_p:first-child]:font-semibold [&_.rich-text_p:first-child]:leading-9">
+              <RichText markdown={markdown} lang={s.mainLanguage} />
+            </div>
           </article>
 
-          <aside className="space-y-4 lg:sticky lg:top-40">
-            <div className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-6 text-center">
-              <div aria-hidden="true" className="pointer-events-none absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
-              <div className="relative mx-auto h-24 w-24 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px]">
-                {s.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-[3px] border-card object-cover" />
-                ) : (
-                  <span aria-hidden="true" className="flex h-full w-full items-center justify-center rounded-full border-[3px] border-card bg-primary text-3xl font-black text-primary-foreground">
-                    {s.displayName.charAt(0)}
-                  </span>
-                )}
-              </div>
-              <p className="relative mt-3 text-lg font-black tracking-tight">{s.displayName}</p>
-              <dl className="relative mt-4 grid grid-cols-3 gap-2">
-                {stats.map((st) => (
-                  <div key={st.l} className="flex flex-col-reverse rounded-2xl bg-background/70 px-2 py-3">
-                    <dt className="truncate text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{st.l}</dt>
-                    <dd className="text-xl font-black tabular-nums">{st.n}</dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="relative mt-5 space-y-2">
-                {s.subscriptionFromCents != null && (
-                  <a href={ctx.links.subscriptions} className={`${btn.primary} w-full whitespace-normal text-center`}>
-                    {th('subscribeFrom', { price: formatPrice(format, s.subscriptionFromCents) })}
-                  </a>
-                )}
-                <a href={ctx.links.home} className={`${btn.outline} w-full`}>
-                  {tA('toContent')}
-                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
+          <aside className="space-y-3 lg:sticky lg:top-40">
+            {s.subscriptionFromCents != null && (
+              <a href={ctx.links.subscriptions} className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/70 p-6 text-primary-foreground shadow-xl shadow-primary/25">
+                <div aria-hidden="true" className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary-foreground/15 blur-2xl" />
+                <p className="relative text-sm font-semibold opacity-85">{tA('subsEyebrow')}</p>
+                <p className="relative mt-1 text-2xl font-black tabular-nums">{tA('from', { price: formatPrice(format, s.subscriptionFromCents) })}</p>
+                <p className="relative mt-4 inline-flex items-center gap-1.5 text-sm font-bold">
+                  {tA('subscribeCta')}
+                  <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
+                </p>
+              </a>
+            )}
+            <a href={ctx.links.home} className="group flex items-center justify-between rounded-3xl border border-border bg-card p-5 font-bold hover:border-primary">
+              {tA('toContent')}
+              <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
+            </a>
           </aside>
         </div>
       </main>

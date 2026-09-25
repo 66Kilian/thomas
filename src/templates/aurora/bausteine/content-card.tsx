@@ -35,15 +35,20 @@ export function ContentCard({ ctx, card, size = 'small' }: ContentCardProps) {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent via-45% to-black/50" />
         <MotionPreview preview={card.preview} playLabel={t('playPreview')} pauseLabel={t('pausePreview')} buttonClassName="bottom-2.5 left-2.5" />
 
-        <span className={`${chip} left-2.5 top-2.5 w-7 justify-center px-0`} title={card.type === 'video' ? t('video') : t('gallery')}>
+        <span className={`${chip} left-2.5 top-2.5`}>
           {card.type === 'video' ? <Video aria-hidden="true" className="h-3.5 w-3.5" /> : <Images aria-hidden="true" className="h-3.5 w-3.5" />}
-          <span className="sr-only">{card.type === 'video' ? t('video') : t('gallery')}</span>
+          {card.type === 'video' ? t('video') : t('gallery')}
         </span>
 
         {(a.state === 'owned' || a.state === 'subscription') && (
-          <span className={`${chip} right-2.5 top-2.5 max-w-[calc(100%-3.5rem)] bg-emerald-600/90`}>
+          <span className={`${chip} right-2.5 top-2.5 max-w-[calc(100%-6.5rem)] bg-emerald-600/90`}>
             <Check aria-hidden="true" className="h-3 w-3 shrink-0" strokeWidth={3} />
             <span className="truncate">{a.state === 'owned' ? t('owned') : t('inSubscription')}</span>
+          </span>
+        )}
+        {a.state === 'locked' && (
+          <span lang={ctx.site.mainLanguage} className={`${chip} right-2.5 top-2.5 max-w-[calc(100%-6.5rem)] bg-red-600/95`}>
+            <span className="truncate tabular-nums">{a.priceCents != null ? formatPrice(format, a.priceCents) : a.packages.join(' · ') || t('subscription')}</span>
           </span>
         )}
 
@@ -65,6 +70,10 @@ export function ContentCard({ ctx, card, size = 'small' }: ContentCardProps) {
         {card.type === 'photo_gallery' && card.imageCount != null && (
           <span className={`${chip} bottom-2.5 right-2.5`}>{t('images', { count: card.imageCount })}</span>
         )}
+        {/* Maus: Aufforderung am unteren Rand (Touch-Geräte sehen sie nicht). */}
+        <span aria-hidden="true" className="pointer-events-none absolute inset-x-2.5 bottom-2.5 z-20 hidden h-9 translate-y-2 items-center justify-center rounded-xl bg-primary text-xs font-bold text-primary-foreground opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 [@media(hover:hover)]:flex">
+          {a.state === 'locked' ? tA('unlock') : tA('watch')}
+        </span>
       </div>
 
       <div className="grid min-w-0 grid-cols-1 gap-1 px-0.5">
@@ -74,20 +83,15 @@ export function ContentCard({ ctx, card, size = 'small' }: ContentCardProps) {
         <time dateTime={card.createdAt} className="truncate text-xs text-muted-foreground">
           {format.dateTime(new Date(card.createdAt), 'dateLong')}
         </time>
-        {/* Zugangszeile mit fester Höhe — leer bei frei/gekauft/im Abo, damit alle Kacheln gleich hoch bleiben. */}
-        <div className="flex h-6 min-w-0 items-center gap-1.5 overflow-hidden">
-          {a.state === 'locked' && a.priceCents != null && (
-            <span className="inline-flex h-6 shrink-0 items-center rounded-full bg-red-600 px-2.5 text-xs font-bold tabular-nums text-white">
-              {formatPrice(format, a.priceCents)}
-            </span>
-          )}
+        {/* Zugangszeile mit fester Höhe: bei „Einzelkauf oder Abo" steht hier die Abo-Alternative (Preis oben im Bild). */}
+        <div className="flex h-6 min-w-0 items-center gap-1.5 overflow-hidden text-xs">
           {a.state === 'locked' && a.priceCents != null && a.packages.length > 0 && (
-            <span className="shrink-0 text-[11px] text-muted-foreground">{tA('or')}</span>
-          )}
-          {a.state === 'locked' && a.packages.length > 0 && (
-            <span lang={ctx.site.mainLanguage} className="inline-flex h-6 min-w-0 items-center rounded-full bg-red-600 px-2.5 text-xs font-bold text-white">
-              <span className="truncate">{a.packages.join(' · ')}</span>
-            </span>
+            <>
+              <span className="shrink-0 text-muted-foreground">{tA('or')}</span>
+              <span lang={ctx.site.mainLanguage} className="inline-flex h-6 min-w-0 items-center rounded-full bg-red-600 px-2.5 font-bold text-white">
+                <span className="truncate">{a.packages.join(' · ')}</span>
+              </span>
+            </>
           )}
         </div>
       </div>

@@ -55,44 +55,71 @@ function place(e: EventItem) {
 function EventRow({ e, lang }: { e: EventItem; lang: string }) {
   const format = useFormatter();
   const t = useTranslations('events');
+  const tA = useTranslations('tpl_aurora');
   const off = e.status === 'cancelled';
   const ort = place(e);
+  const act = 'inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-4 text-xs font-bold';
   return (
-    <a
-      href={e.href}
-      className={`group flex items-center gap-4 rounded-3xl border border-border bg-card p-3 pr-4 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl hover:shadow-primary/10 motion-reduce:transform-none sm:gap-5 ${off ? 'opacity-70' : ''}`}
-    >
-      <DateTile iso={e.startAt} muted={off} />
-      <div className="min-w-0 flex-1 space-y-1.5">
-        <EventBadges e={e} />
-        <h3 lang={lang} className={`truncate text-lg font-bold tracking-tight ${off ? 'line-through' : ''}`}>
-          {e.title}
-        </h3>
-        <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-            {format.dateTime(new Date(e.startAt), { hour: '2-digit', minute: '2-digit' })}
-          </span>
-          {(ort || e.online) && (
-            <span className="inline-flex min-w-0 items-center gap-1.5">
-              {e.online ? <Globe aria-hidden="true" className="h-3.5 w-3.5 shrink-0" /> : <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />}
-              <span className="truncate">{e.online ? t('online') : ort}</span>
+    <article className={`group rounded-3xl border border-border bg-card p-4 transition hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10 sm:p-5 ${off ? 'opacity-70' : ''}`}>
+      <div className="flex gap-4 sm:gap-5">
+        <DateTile iso={e.startAt} muted={off} />
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <EventBadges e={e} />
+          <h3 lang={lang} className={`text-lg font-bold leading-snug tracking-tight sm:text-xl ${off ? 'line-through' : ''}`}>
+            <a href={e.href} className="hover:underline">{e.title}</a>
+          </h3>
+          <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+              {format.dateTime(new Date(e.startAt), { hour: '2-digit', minute: '2-digit' })}
+              {e.endAt && ` – ${format.dateTime(new Date(e.endAt), { hour: '2-digit', minute: '2-digit' })}`}
             </span>
-          )}
+            {(ort || e.online) && (
+              <span className="inline-flex min-w-0 items-center gap-1.5">
+                {e.online ? <Globe aria-hidden="true" className="h-3.5 w-3.5 shrink-0" /> : <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />}
+                <span className="truncate">{e.online ? t('online') : ort}</span>
+              </span>
+            )}
+          </p>
           {e.admission && (
-            <span lang={lang} className="inline-flex min-w-0 items-center gap-1.5">
-              <Ticket aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{e.admission}</span>
-            </span>
+            <p lang={lang} className="pt-1">
+              <span className="inline-flex max-w-full items-center gap-1.5 rounded-xl bg-background px-3 py-1.5 text-xs font-semibold ring-1 ring-border">
+                <Ticket aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[color:var(--brand-link,var(--color-primary))]" />
+                <span className="truncate">{e.admission}</span>
+              </span>
+            </p>
           )}
-        </p>
+        </div>
+        {e.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={e.imageUrl} alt="" className="hidden h-24 w-36 shrink-0 rounded-2xl object-cover md:block" />
+        )}
       </div>
-      {e.imageUrl && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={e.imageUrl} alt="" className="hidden h-20 w-28 shrink-0 rounded-2xl object-cover sm:block" />
-      )}
-      <ArrowRight aria-hidden="true" className="hidden h-5 w-5 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground sm:block" />
-    </a>
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4 sm:pl-[5.75rem]">
+        {e.ticketUrl && !off && (
+          <a href={e.ticketUrl} className={`${act} bg-primary text-primary-foreground`}>
+            <Ticket aria-hidden="true" className="h-3.5 w-3.5" />
+            {t('tickets')}
+          </a>
+        )}
+        {e.calendarHref && !off && (
+          <a href={e.calendarHref} className={`${act} bg-background ring-1 ring-border hover:ring-primary`}>
+            <CalendarPlus aria-hidden="true" className="h-3.5 w-3.5" />
+            {tA('calendar')}
+          </a>
+        )}
+        {e.location.mapHref && !e.online && (
+          <a href={e.location.mapHref} className={`${act} bg-background ring-1 ring-border hover:ring-primary`}>
+            <MapIcon aria-hidden="true" className="h-3.5 w-3.5" />
+            {tA('map')}
+          </a>
+        )}
+        <a href={e.href} className={`${act} ml-auto text-muted-foreground hover:text-foreground`}>
+          {tA('details')}
+          <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+        </a>
+      </div>
+    </article>
   );
 }
 
@@ -103,45 +130,71 @@ function NextEvent({ e, lang }: { e: EventItem; lang: string }) {
   const tA = useTranslations('tpl_aurora');
   const ort = place(e);
   return (
-    <a href={e.href} className="group relative mb-12 block overflow-hidden rounded-[2rem] border border-border bg-card">
+    <article className="group relative overflow-hidden rounded-[2rem] border border-primary/40 bg-card shadow-2xl shadow-primary/15">
       {e.imageUrl ? (
         <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={e.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none" />
-          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/20" />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/25" />
         </>
       ) : (
-        <div aria-hidden="true" className="absolute inset-0">
-          <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
-          <div className="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-primary/30 via-card to-card">
+          <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-accent/30 blur-3xl" />
         </div>
       )}
-      <div className={`relative flex min-h-[18rem] flex-col justify-end gap-5 p-6 sm:min-h-[22rem] sm:flex-row sm:items-end sm:p-8 ${e.imageUrl ? 'text-white' : ''}`}>
-        <DateTile iso={e.startAt} large />
-        <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-80">{tA('nextEvent')}</p>
-          <h2 lang={lang} className="break-words text-3xl font-black leading-tight tracking-tight sm:text-4xl">
-            {e.title}
-          </h2>
-          <p className="flex flex-wrap gap-x-5 gap-y-1 text-sm opacity-85">
-            <span className="inline-flex items-center gap-1.5">
-              <Clock aria-hidden="true" className="h-4 w-4" />
-              {format.dateTime(new Date(e.startAt), 'dateTimeFull')}
-            </span>
-            {(ort || e.online) && (
+      <div className={`relative flex min-h-[20rem] flex-col justify-end gap-5 p-6 sm:p-8 ${e.imageUrl ? 'text-white' : ''}`}>
+        <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em]">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+          </span>
+          {tA('nextEvent')}
+        </p>
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
+          <DateTile iso={e.startAt} large />
+          <div className="min-w-0 flex-1 space-y-2">
+            <h2 lang={lang} className="break-words text-3xl font-black leading-tight tracking-tight sm:text-4xl">{e.title}</h2>
+            <p className="flex flex-col gap-1 text-sm opacity-90">
               <span className="inline-flex items-center gap-1.5">
-                {e.online ? <Globe aria-hidden="true" className="h-4 w-4" /> : <MapPin aria-hidden="true" className="h-4 w-4" />}
-                {e.online ? t('online') : ort}
+                <Clock aria-hidden="true" className="h-4 w-4" />
+                {format.dateTime(new Date(e.startAt), 'dateTimeFull')}
               </span>
-            )}
-          </p>
+              {(ort || e.online) && (
+                <span className="inline-flex items-center gap-1.5">
+                  {e.online ? <Globe aria-hidden="true" className="h-4 w-4" /> : <MapPin aria-hidden="true" className="h-4 w-4" />}
+                  {e.online ? t('online') : [e.location.address, e.location.city].filter(Boolean).join(', ') || ort}
+                </span>
+              )}
+            </p>
+          </div>
         </div>
-        <span className={`${btn.primary} shrink-0 self-start sm:self-end`}>
-          {tA('details')}
-          <ArrowRight aria-hidden="true" className="h-4 w-4" />
-        </span>
+        <div className="flex flex-wrap gap-2">
+          {e.ticketUrl ? (
+            <a href={e.ticketUrl} className={btn.primary}>
+              <Ticket aria-hidden="true" className="h-4 w-4" />
+              {t('tickets')}
+            </a>
+          ) : (
+            <a href={e.href} className={btn.primary}>
+              {tA('details')}
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </a>
+          )}
+          {e.calendarHref && (
+            <a href={e.calendarHref} className="inline-flex h-11 items-center gap-2 rounded-full bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
+              <CalendarPlus aria-hidden="true" className="h-4 w-4" />
+              {tA('calendar')}
+            </a>
+          )}
+          {e.location.mapHref && !e.online && (
+            <a href={e.location.mapHref} className="inline-flex h-11 items-center gap-2 rounded-full bg-black/35 px-5 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur-md">
+              <MapIcon aria-hidden="true" className="h-4 w-4" />
+              {tA('map')}
+            </a>
+          )}
+        </div>
       </div>
-    </a>
+    </article>
   );
 }
 
@@ -152,6 +205,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
   const lang = ctx.site.mainLanguage;
   const next = !cityFilter.value ? events.find((e) => e.status !== 'cancelled') : undefined;
   const rest = events.filter((e) => e !== next);
+  const cities = [...new Set(events.map((e) => e.location.city).filter((c): c is string => Boolean(c)))];
   // Nach Monat gruppieren (Reihenfolge der Plattform bleibt erhalten).
   const groups: { key: string; items: EventItem[] }[] = [];
   for (const e of rest) {
@@ -160,32 +214,64 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
     if (g) g.items.push(e);
     else groups.push({ key, items: [e] });
   }
+  const chip = 'inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full px-4 text-sm font-semibold transition';
   return (
     <Shell ctx={ctx}>
-      <Page width="max-w-4xl">
-        <PageHead eyebrow={tA('eventsEyebrow')} title={t('title')}>
-          <form action={cityFilter.action} method="get" role="search" className="relative flex w-full sm:w-80">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div aria-hidden="true" className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
+        <div aria-hidden="true" className="absolute -right-24 top-0 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 pb-10 pt-12 sm:pt-16 lg:grid-cols-[1fr_28rem] lg:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{tA('liveEyebrow')}</p>
+            <h1 className="mt-3 break-words text-5xl font-black leading-[1.02] tracking-tighter sm:text-7xl">{tA('liveTitle', { name: ctx.site.displayName })}</h1>
+            <p className="mt-4 max-w-lg text-lg text-muted-foreground">{tA('liveSub')}</p>
+            <p className="mt-6 flex flex-wrap gap-2">
+              <span className="inline-flex h-9 items-center rounded-full bg-card px-4 text-sm font-semibold ring-1 ring-border">{tA('dates', { count: events.length })}</span>
+              {cities.length > 0 && <span className="inline-flex h-9 items-center rounded-full bg-card px-4 text-sm font-semibold ring-1 ring-border">{tA('cities', { count: cities.length })}</span>}
+            </p>
+          </div>
+          {next && <NextEvent e={next} lang={lang} />}
+        </div>
+      </section>
+
+      {/* Stadt-Auswahl: Pillen (je ein GET-Formular des Stadtfilters) + freie Suche. Funktioniert ohne JavaScript. */}
+      <div className="sticky top-[5.25rem] z-30 border-y border-border bg-background/80 backdrop-blur-xl sm:top-[7.75rem]">
+        <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-3 [scrollbar-width:thin]">
+          {cityFilter.resetHref ? (
+            <a href={cityFilter.resetHref} className={`${chip} bg-card ring-1 ring-border hover:ring-primary`}>{tA('all')}</a>
+          ) : (
+            <span aria-current="true" className={`${chip} bg-foreground text-background`}>{tA('all')}</span>
+          )}
+          {cities.map((c) => {
+            const on = cityFilter.value.toLowerCase() === c.toLowerCase();
+            return (
+              <form key={c} action={cityFilter.action} method="get" className="shrink-0">
+                {Object.entries(cityFilter.hidden).map(([k, v]) => (
+                  <input key={k} type="hidden" name={k} value={v} />
+                ))}
+                <input type="hidden" name="stadt" value={c} />
+                <button type="submit" aria-pressed={on} className={`${chip} ${on ? 'bg-foreground text-background' : 'bg-card ring-1 ring-border hover:ring-primary'}`}>
+                  <MapPin aria-hidden="true" className="h-3.5 w-3.5" />
+                  {c}
+                </button>
+              </form>
+            );
+          })}
+          <form action={cityFilter.action} method="get" role="search" className="relative ml-auto hidden shrink-0 sm:block">
             {Object.entries(cityFilter.hidden).map(([k, v]) => (
               <input key={k} type="hidden" name={k} value={v} />
             ))}
-            <label className="block flex-1">
+            <label>
               <span className="sr-only">{t('filterPlaceholder')}</span>
-              <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input name="stadt" defaultValue={cityFilter.value} placeholder={t('filterPlaceholder')} className={`${input} h-12 rounded-full pl-11 pr-24`} />
+              <Search aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input name="stadt" defaultValue={cities.some((c) => c.toLowerCase() === cityFilter.value.toLowerCase()) ? '' : cityFilter.value} placeholder={t('filterPlaceholder')} className={`${input} h-10 w-56 rounded-full pl-10`} />
             </label>
-            <button type="submit" className="absolute right-1.5 top-1.5 inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground">
-              {t('filter')}
-            </button>
           </form>
-        </PageHead>
-        {cityFilter.resetHref && (
-          <p className="-mt-6 mb-8 text-sm">
-            <a href={cityFilter.resetHref} className="font-semibold underline decoration-primary decoration-2 underline-offset-4">
-              {t('reset')}
-            </a>
-          </p>
-        )}
+        </div>
+      </div>
 
+      <Page width="max-w-4xl">
         {near && (
           <section className="relative mb-12 overflow-hidden rounded-[2rem] border border-border bg-card p-6 sm:p-8">
             <div aria-hidden="true" className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl" />
@@ -198,9 +284,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
                 {near.cities.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {near.cities.map((c) => (
-                      <span key={c} className="inline-flex h-8 items-center rounded-full bg-background px-3.5 text-sm font-semibold ring-1 ring-border">
-                        {c}
-                      </span>
+                      <span key={c} className="inline-flex h-8 items-center rounded-full bg-background px-3.5 text-sm font-semibold ring-1 ring-border">{c}</span>
                     ))}
                   </div>
                 )}
@@ -224,9 +308,7 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
                 <p className="text-xs text-muted-foreground">{t('subscribeHint')}</p>
                 <div className="flex gap-2">
                   <input name="city" placeholder={t('cityPlaceholder')} className={`${input} h-11`} />
-                  <button type="submit" className={btn.primary}>
-                    {t('subscribe')}
-                  </button>
+                  <button type="submit" className={btn.primary}>{t('subscribe')}</button>
                 </div>
                 <FlashBox flash={flash} />
               </form>
@@ -237,24 +319,22 @@ export function Events({ ctx, events, cityFilter, near, flash }: EventsProps) {
         {events.length === 0 ? (
           <Empty>{t('empty')}</Empty>
         ) : (
-          <>
-            {next && <NextEvent e={next} lang={lang} />}
-            <div className="space-y-10">
-              {groups.map((g) => (
-                <section key={g.key}>
-                  <h2 className="mb-4 flex items-center gap-3 text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                    {g.key}
-                    <span aria-hidden="true" className="h-px flex-1 bg-border" />
-                  </h2>
-                  <div className="space-y-3">
-                    {g.items.map((e) => (
-                      <EventRow key={e.id} e={e} lang={lang} />
-                    ))}
-                  </div>
-                </section>
-              ))}
-            </div>
-          </>
+          <div className="space-y-12">
+            {groups.map((g) => (
+              <section key={g.key}>
+                <h2 className="mb-5 flex items-baseline gap-3">
+                  <span className="text-3xl font-black tracking-tight">{g.key}</span>
+                  <span className="text-sm font-semibold text-muted-foreground">{tA('dates', { count: g.items.length })}</span>
+                  <span aria-hidden="true" className="h-px flex-1 self-center bg-border" />
+                </h2>
+                <div className="space-y-3">
+                  {g.items.map((e) => (
+                    <EventRow key={e.id} e={e} lang={lang} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
         )}
       </Page>
     </Shell>

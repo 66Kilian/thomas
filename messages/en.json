@@ -430,6 +430,21 @@
     "subscribeCta": "Subscribe",
     "requestCta": "Send a request",
     "toContent": "See the content",
-    "extendShort": "Extend"
+    "extendShort": "Extend",
+    "choosePlan": "Choose your term",
+    "continueWith": "Continue with {plan}",
+    "allIncluded": "Every term unlocks all content of this tier.",
+    "selected": "Selected",
+    "choose": "Select",
+    "watch": "Watch",
+    "unlock": "Unlock",
+    "dates": "{count, plural, one {# date} other {# dates}}",
+    "cities": "{count, plural, one {# city} other {# cities}}",
+    "all": "All",
+    "liveEyebrow": "Meet live",
+    "liveTitle": "Meet {name} live.",
+    "liveSub": "Parties, shoots and meet-ups – every date at a glance.",
+    "calendar": "Calendar",
+    "map": "Map"
   }
 }

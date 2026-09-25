@@ -1,4 +1,4 @@
-import { CalendarClock, Check, ChevronDown, ExternalLink, Gift, Layers, Lock, Repeat, Sparkles, Users } from 'lucide-react';
+import { CalendarClock, Check, ExternalLink, Gift, Layers, Lock, Repeat, Sparkles, Users } from 'lucide-react';
 import { useFormatter, useTranslations } from 'next-intl';
 
 import { formatPrice } from '@/kit/format';
@@ -14,106 +14,187 @@ import { Box, btn, Empty, FlashBox, input, label, Page, PageHead } from '../baus
 
 // ─── Abos ──────────────────────────────────────────────────────────────────────────────────────
 
-/**
- * Abo-Stufen als Preiskarten. Die teuerste Stufe (bei mehreren) wird als Premium hervorgehoben;
- * jede Laufzeit ist eine eigene Zeile mit Kaufbereich. Funktioniert mit 1 Stufe/1 Plan wie mit vielen.
+/*
+ * Laufzeit-Auswahl ohne JavaScript über Anker (`#plan-…` + `:target`): Jede Laufzeit ist eine Karte
+ * (Link auf ihren Kaufbereich), sichtbar ist immer genau ein Kaufbereich. Ohne Anker gilt die
+ * Standard-Laufzeit (erste mit offenem Zustand, sonst die erste). Tailwind braucht feste Klassen —
+ * daher die Tabellen für bis zu 8 Laufzeiten je Stufe.
  */
+const SHOW_PANEL = [
+  '[&:has([data-p="0"]:target)_[data-p="0"]]:block',
+  '[&:has([data-p="1"]:target)_[data-p="1"]]:block',
+  '[&:has([data-p="2"]:target)_[data-p="2"]]:block',
+  '[&:has([data-p="3"]:target)_[data-p="3"]]:block',
+  '[&:has([data-p="4"]:target)_[data-p="4"]]:block',
+  '[&:has([data-p="5"]:target)_[data-p="5"]]:block',
+  '[&:has([data-p="6"]:target)_[data-p="6"]]:block',
+  '[&:has([data-p="7"]:target)_[data-p="7"]]:block'
+].join(' ');
+const MARK_CARD = [
+  '[&:has([data-p="0"]:target)_[data-c="0"]]:border-primary [&:has([data-p="0"]:target)_[data-c="0"]]:bg-primary/10 [&:has([data-p="0"]:target)_[data-c="0"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="1"]:target)_[data-c="1"]]:border-primary [&:has([data-p="1"]:target)_[data-c="1"]]:bg-primary/10 [&:has([data-p="1"]:target)_[data-c="1"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="2"]:target)_[data-c="2"]]:border-primary [&:has([data-p="2"]:target)_[data-c="2"]]:bg-primary/10 [&:has([data-p="2"]:target)_[data-c="2"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="3"]:target)_[data-c="3"]]:border-primary [&:has([data-p="3"]:target)_[data-c="3"]]:bg-primary/10 [&:has([data-p="3"]:target)_[data-c="3"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="4"]:target)_[data-c="4"]]:border-primary [&:has([data-p="4"]:target)_[data-c="4"]]:bg-primary/10 [&:has([data-p="4"]:target)_[data-c="4"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="5"]:target)_[data-c="5"]]:border-primary [&:has([data-p="5"]:target)_[data-c="5"]]:bg-primary/10 [&:has([data-p="5"]:target)_[data-c="5"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="6"]:target)_[data-c="6"]]:border-primary [&:has([data-p="6"]:target)_[data-c="6"]]:bg-primary/10 [&:has([data-p="6"]:target)_[data-c="6"]_[data-dot]]:after:scale-100',
+  '[&:has([data-p="7"]:target)_[data-c="7"]]:border-primary [&:has([data-p="7"]:target)_[data-c="7"]]:bg-primary/10 [&:has([data-p="7"]:target)_[data-c="7"]_[data-dot]]:after:scale-100'
+].join(' ');
+/** Ohne Anker in dieser Stufe: Standard-Laufzeit zeigen und markieren. */
+const DEFAULT =
+  '[&:not(:has([data-p]:target))_[data-p][data-default]]:block [&:not(:has([data-p]:target))_[data-c][data-default]]:border-primary [&:not(:has([data-p]:target))_[data-c][data-default]]:bg-primary/10 [&:not(:has([data-p]:target))_[data-c][data-default]_[data-dot]]:after:scale-100';
+
+/** Hängt den Anker der Laufzeit an die Links des Kaufbereichs — nach dem Neuladen bleibt sie gewählt. */
+function withAnchor(panel: SubscriptionsProps['tiers'][number]['plans'][number]['purchase'], anchor: string) {
+  const s = panel.state;
+  if (s.kind !== 'ready') return panel;
+  const a = (h: string) => (h.includes('#') ? h : `${h}#${anchor}`);
+  return { ...panel, state: { ...s, methods: s.methods.map((m) => ({ ...m, href: a(m.href) })) } };
+}
+
 export function Subscriptions({ ctx, tiers, confirm }: SubscriptionsProps) {
   const t = useTranslations('subscriptions');
   const tA = useTranslations('tpl_aurora');
   const format = useFormatter();
   const lang = ctx.site.mainLanguage;
+  const s = ctx.site;
   const minPrice = (p: { priceCents: number }[]) => (p.length ? Math.min(...p.map((x) => x.priceCents)) : 0);
   const top = tiers.length > 1 ? tiers.reduce((a, b) => (minPrice(b.plans) > minPrice(a.plans) ? b : a)) : null;
   return (
     <Shell ctx={ctx}>
-      <Page width="max-w-6xl">
-        <PageHead eyebrow={tA('subsEyebrow')} title={t('title')} />
+      {/* Kopf wie auf der Startseite: Porträt im Lichtschein, Name, großer Titel. */}
+      <section className="relative overflow-hidden">
+        {s.coverUrl && (
+          <div aria-hidden="true" className="absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={s.coverUrl} alt="" className="h-full w-full object-cover opacity-40 blur-sm" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/80 to-background" />
+          </div>
+        )}
+        <div aria-hidden="true" className="absolute left-1/2 top-0 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
+        <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pb-10 pt-12 text-center sm:pt-16">
+          <div className="h-20 w-20 rounded-full bg-[conic-gradient(from_200deg,var(--color-primary),var(--color-accent),var(--color-primary))] p-[3px]">
+            {s.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={s.logoUrl} alt="" className="h-full w-full rounded-full border-[3px] border-background object-cover" />
+            ) : (
+              <span aria-hidden="true" className="flex h-full w-full items-center justify-center rounded-full border-[3px] border-background bg-primary text-2xl font-black text-primary-foreground">{s.displayName.charAt(0)}</span>
+            )}
+          </div>
+          <p className="mt-3 font-bold">{s.displayName}</p>
+          <p className="mt-1 flex gap-4 text-sm text-muted-foreground">
+            <span>{tA('statPosts', { count: s.stats.posts })}: <b className="text-foreground tabular-nums">{s.stats.posts}</b></span>
+            <span>{tA('statVideos', { count: s.stats.videos })}: <b className="text-foreground tabular-nums">{s.stats.videos}</b></span>
+          </p>
+          <p className="mt-8 text-xs font-bold uppercase tracking-[0.2em] text-[color:var(--brand-link,var(--color-primary))]">{tA('subsEyebrow')}</p>
+          <h1 className="mt-2 text-5xl font-black tracking-tighter sm:text-6xl">{t('title')}</h1>
+          <p className="mt-3 max-w-md text-muted-foreground">{tA('allIncluded')}</p>
+        </div>
+      </section>
+
+      <main id="inhalt" className="mx-auto max-w-6xl px-4">
         {tiers.length === 0 ? (
           <Empty>{t('empty')}</Empty>
         ) : (
-          <div className={`grid items-start gap-5 ${tiers.length === 1 ? 'max-w-md' : tiers.length === 2 ? 'md:grid-cols-2 lg:max-w-4xl' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
+          <div className="space-y-16">
             {tiers.map((tier) => {
               const featured = tier === top;
+              const def = Math.max(0, tier.plans.findIndex((p) => p.purchase.state.kind !== 'ready' || p.purchase.error != null || p.pendingTransfer != null));
+              const cols = tier.plans.length >= 4 ? 'lg:grid-cols-4' : tier.plans.length === 3 ? 'lg:grid-cols-3' : '';
               return (
-                <article
-                  key={tier.id}
-                  className={`relative flex flex-col overflow-hidden rounded-[1.75rem] p-5 sm:p-6 ${
-                    featured ? 'bg-gradient-to-b from-primary/20 via-card to-card ring-2 ring-primary shadow-2xl shadow-primary/20' : 'border border-border bg-card'
-                  }`}
-                >
-                  {featured && <div aria-hidden="true" className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-accent/25 blur-3xl" />}
-                  <div className="relative flex items-start justify-between gap-3">
-                    <h2 lang={lang} className="min-w-0 break-words text-xl font-black tracking-tight">
-                      {tier.name}
-                    </h2>
-                    {tier.active ? (
-                      <span className="inline-flex h-6 shrink-0 items-center gap-1 rounded-full bg-emerald-600 px-2.5 text-[11px] font-bold text-white">
-                        <Check aria-hidden="true" className="h-3 w-3" strokeWidth={3} />
-                        {t('active')}
-                      </span>
-                    ) : (
-                      featured && (
-                        <span className="inline-flex h-6 shrink-0 items-center gap-1 rounded-full bg-primary px-2.5 text-[11px] font-bold text-primary-foreground">
-                          <Sparkles aria-hidden="true" className="h-3 w-3" />
-                          {tA('popular')}
-                        </span>
-                      )
-                    )}
+                <section key={tier.id} className={`${SHOW_PANEL} ${MARK_CARD} ${DEFAULT}`}>
+                  {/* Stufen-Kopf */}
+                  <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h2 lang={lang} className="break-words text-3xl font-black tracking-tight">{tier.name}</h2>
+                        {tier.active && (
+                          <span className="inline-flex h-7 items-center gap-1 rounded-full bg-emerald-600 px-3 text-xs font-bold text-white">
+                            <Check aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={3} />
+                            {t('active')}
+                          </span>
+                        )}
+                        {featured && !tier.active && (
+                          <span className="inline-flex h-7 items-center gap-1 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground">
+                            <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+                            {tA('popular')}
+                          </span>
+                        )}
+                      </div>
+                      {tier.description && <p lang={lang} className="mt-2 max-w-2xl text-muted-foreground">{tier.description}</p>}
+                    </div>
+                    {tier.plans.length > 1 && <p className="shrink-0 text-sm font-semibold text-muted-foreground">{tA('choosePlan')}</p>}
                   </div>
-                  {tier.plans.length > 0 && (
-                    <p className="relative mt-2 text-3xl font-black tabular-nums tracking-tight">{tA('from', { price: formatPrice(format, minPrice(tier.plans)) })}</p>
-                  )}
-                  {tier.description && (
-                    <p lang={lang} className="relative mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
-                      {tier.description}
-                    </p>
-                  )}
                   {tier.active && tier.activeUntil && (
-                    <div className="relative mt-4">
-                      <Box kind="success">{t('activeUntil', { date: format.dateTime(new Date(tier.activeUntil), 'dateLong') })}</Box>
+                    <div className="mb-6">
+                      <Box kind="success">{t('activeUntil', { date: format.dateTime(new Date(tier.activeUntil), 'dateLong') })} {t('extend')}</Box>
                     </div>
                   )}
-                  <div className="relative mt-4 space-y-2">
-                    {tier.plans.length === 0 && <p className="text-sm text-muted-foreground">{t('noPlans')}</p>}
-                    {tier.plans.map((plan) => {
-                      const direkt = plan.purchase.state.kind !== 'ready' || plan.purchase.error != null || plan.pendingTransfer != null;
-                      return (
-                        <details key={plan.id} open={direkt} className="group rounded-2xl border border-border bg-background/70 open:border-primary/60">
-                          <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
-                            <span className="min-w-0 flex-1">
-                              <span lang={lang} className="block truncate font-bold">{plan.label}</span>
-                              <span className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
-                                {plan.recurring ? <Repeat aria-hidden="true" className="h-3 w-3" /> : <CalendarClock aria-hidden="true" className="h-3 w-3" />}
-                                {plan.recurring ? t('recurring') : t('once')}
-                              </span>
-                            </span>
-                            <span className="shrink-0 text-lg font-black tabular-nums">{formatPrice(format, plan.priceCents)}</span>
-                            <span className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-primary px-3 text-xs font-bold text-primary-foreground group-open:bg-foreground group-open:text-background">
-                              {tier.active ? tA('extendShort') : tA('book')}
-                              <ChevronDown aria-hidden="true" className="h-3.5 w-3.5 transition group-open:rotate-180" />
-                            </span>
-                          </summary>
-                          <div className="space-y-3 border-t border-border px-4 pb-4 pt-4">
-                            {plan.pendingTransfer ? (
-                              <>
-                                <Box kind="warning">{t('openTransfer')}</Box>
-                                <BankBox bank={plan.pendingTransfer} />
-                              </>
-                            ) : (
-                              <PurchasePanel ctx={ctx} panel={plan.purchase} />
-                            )}
-                          </div>
-                        </details>
-                      );
-                    })}
+                  {tier.plans.length === 0 && <p className="text-sm text-muted-foreground">{t('noPlans')}</p>}
+
+                  {/* Laufzeit-Karten */}
+                  <div className={`grid gap-3 sm:grid-cols-2 sm:gap-4 ${cols}`}>
+                    {tier.plans.map((plan, i) => (
+                      <a
+                        key={plan.id}
+                        href={`#plan-${plan.id}`}
+                        data-c={i}
+                        data-default={i === def ? '' : undefined}
+                        className="group relative flex flex-col rounded-3xl border-[1.5px] border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/60 motion-reduce:transform-none sm:p-6"
+                      >
+                        <span className="flex items-center justify-between gap-3">
+                          <span lang={lang} className="truncate text-lg font-bold">{plan.label}</span>
+                          <span data-dot="" className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-border after:h-2.5 after:w-2.5 after:scale-0 after:rounded-full after:bg-primary after:transition after:content-['']" />
+                        </span>
+                        <span className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                          {plan.recurring ? <Repeat aria-hidden="true" className="h-3.5 w-3.5" /> : <CalendarClock aria-hidden="true" className="h-3.5 w-3.5" />}
+                          {plan.recurring ? t('recurring') : t('once')}
+                        </span>
+                        <span className="mt-6 text-4xl font-black tabular-nums tracking-tight">{formatPrice(format, plan.priceCents)}</span>
+                        <span className="mt-5 inline-flex h-10 items-center justify-center rounded-2xl bg-background text-sm font-bold ring-1 ring-border group-hover:ring-primary">
+                          {tier.active ? tA('extendShort') : tA('choose')}
+                        </span>
+                      </a>
+                    ))}
                   </div>
-                </article>
+
+                  {/* Kaufbereich der gewählten Laufzeit */}
+                  {tier.plans.map((plan, i) => (
+                    <div
+                      key={plan.id}
+                      id={`plan-${plan.id}`}
+                      data-p={i}
+                      data-default={i === def ? '' : undefined}
+                      className="mt-4 hidden scroll-mt-40 rounded-[2rem] border border-border bg-card p-6 sm:p-8"
+                    >
+                      <div className="grid gap-6 lg:grid-cols-[1fr_24rem] lg:items-start">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">{tA('selected')}</p>
+                          <p lang={lang} className="mt-1 text-2xl font-black tracking-tight">
+                            {tier.name} · {plan.label}
+                          </p>
+                          <p className="mt-2 text-4xl font-black tabular-nums tracking-tight text-[color:var(--brand-link,var(--color-primary))]">{formatPrice(format, plan.priceCents)}</p>
+                          <p className="mt-2 text-sm text-muted-foreground">{plan.recurring ? t('recurring') : t('once')}</p>
+                        </div>
+                        <div className="space-y-4">
+                          {plan.pendingTransfer ? (
+                            <>
+                              <Box kind="warning">{t('openTransfer')}</Box>
+                              <BankBox bank={plan.pendingTransfer} />
+                            </>
+                          ) : (
+                            <PurchasePanel ctx={ctx} panel={withAnchor(plan.purchase, `plan-${plan.id}`)} />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </section>
               );
             })}
           </div>
         )}
-      </Page>
+      </main>
       {confirm && <ConfirmDialog ctx={ctx} dialog={confirm} />}
     </Shell>
   );
