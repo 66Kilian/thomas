@@ -48,10 +48,10 @@ Dachzeilen je Seite, „Mehr lesen/Weniger", „Im Rampenlicht", „Alle Inhalte
 
 ## Nur zur Präsentation (nicht Teil der Abgabe)
 
-- `src/app/page.tsx` — Präsentationsseite des Pakets unter `/` (Stile, Rundgang durch alle Seiten mit
-  Live-Vorschau, alle Zustände als Links).
+- `src/app/page.tsx` + `src/app/design-wahl.tsx` — Präsentationsseite unter `/`: Design (Farbwelt) wählen,
+  Seite wählen, Live-Vorschau (Desktop + Handy), „Design öffnen"; alle Zustände eingeklappt als Links.
 - `src/app/uebersicht/page.tsx` — die bisherige Kit-Übersicht, verschoben von `/` nach `/uebersicht`.
 - `src/templates/registry.ts` — listet nur `aurora`; das Basis-Template bleibt im Code (Ersatz für fehlende
   Seiten in der Vorschau), wird aber nicht mehr angeboten.
 
-Alle drei können beim Einsetzen in die Plattform auf den Stand des Kits zurückgesetzt werden.
+Alle können beim Einsetzen in die Plattform auf den Stand des Kits zurückgesetzt werden.
